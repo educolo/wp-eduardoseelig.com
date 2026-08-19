@@ -1,0 +1,101 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: "IBM Plex Sans", sans-serif;
+  overflow-x: clip;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+@layer base {
+  :root {
+    --background: 40 20% 97%;
+    --foreground: 220 25% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 25% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 25% 11%;
+    --primary: 220 25% 11%;
+    --primary-foreground: 40 30% 98%;
+    --secondary: 40 16% 92%;
+    --secondary-foreground: 220 25% 11%;
+    --muted: 40 12% 90%;
+    --muted-foreground: 220 10% 40%;
+    --accent: 14 86% 52%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 72% 45%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 40 12% 86%;
+    --input: 40 12% 86%;
+    --ring: 14 86% 52%;
+    --radius: 0.35rem;
+    --ink: 220 28% 9%;
+  }
+}
+
+@layer utilities {
+  .font-display { font-family: "Space Grotesk", sans-serif; }
+  .font-mono-plex { font-family: "IBM Plex Mono", monospace; }
+  .grid-lines {
+    background-image: linear-gradient(hsl(var(--border) / 0.7) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--border) / 0.7) 1px, transparent 1px);
+    background-size: 72px 72px;
+  }
+  .marker-underline {
+    background-image: linear-gradient(hsl(var(--accent) / 0.35), hsl(var(--accent) / 0.35));
+    background-repeat: no-repeat;
+    background-position: 0 88%;
+    background-size: 100% 0.38em;
+  }
+}
+
+/* Ticker animado (franja de tecnologías) */
+.ticker-track {
+  animation: ticker 26s linear infinite;
+}
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* Reveal-on-scroll (reemplaza framer-motion) */
+.es-reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--d, 0s);
+}
+.es-reveal.is-visible { opacity: 1; transform: none; }
+
+.es-fade-in {
+  opacity: 0;
+  transform: translateY(18px);
+  animation: es-fade-in 0.5s ease-out forwards;
+  animation-delay: var(--d, 0s);
+}
+.es-fade-in-scale {
+  opacity: 0;
+  transform: scale(0.97);
+  animation: es-fade-in-scale 0.6s ease-out forwards;
+  animation-delay: 0.1s;
+}
+@keyframes es-fade-in {
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes es-fade-in-scale {
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Idioma: los .i18n con [hidden] se ocultan (comportamiento nativo del atributo) */
+
+@media (prefers-reduced-motion: reduce) {
+  .ticker-track { animation: none; }
+  .es-reveal, .es-fade-in, .es-fade-in-scale { animation: none !important; transition: none !important; opacity: 1 !important; transform: none !important; }
+}
+
+@media print {
+  .no-print { display: none !important; }
+  body { background: #fff; color: #000; }
+}
