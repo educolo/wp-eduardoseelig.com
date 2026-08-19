@@ -259,10 +259,10 @@ function es_educacion() {
 }
 
 function es_habilidades() {
-    return [ 'React', 'Node.js', 'JavaScript', 'PHP', 'WordPress', 'Python', 'PostgreSQL', 'MySQL', 'Docker', 'AWS', 'IA / LLMs', 'Producto', 'Arquitectura', 'TDD', 'Git', '3D' ];
+    return [ 'Python', 'PostgreSQL', 'MySQL', 'Docker', 'AWS', 'IA / LLMs', 'Producto', 'Arquitectura', 'TDD', 'Git', 'JavaScript', 'PHP' ];
 }
 
 /** Items del ticker animado del header del home (subset elegido a mano, igual que el original). */
 function es_habilidades_ticker() {
-    return [ 'React', 'Node.js', 'JavaScript', 'PHP', 'WordPress', 'Python', 'PostgreSQL', 'Docker', 'AWS', 'IA / LLMs', 'Producto', 'TDD', 'Arquitectura', 'Git' ];
+    return [ 'Python', 'PostgreSQL', 'Docker', 'AWS', 'IA / LLMs', 'Producto', 'TDD', 'Arquitectura', 'Git', 'JavaScript', 'PHP' ];
 }
