@@ -1,8 +1,6 @@
 # Tema WordPress — Eduardo Seelig
 
-Tema a medida que replica el diseño del sitio original (React/Vite vía Hostinger
-Horizons) como un tema WordPress clásico (PHP + Tailwind compilado), sin
-depender de page builders.
+Tema a medida WordPress clásico (PHP + Tailwind compilado), para el sitio www.eduardoseelig.com
 
 ## Instalación
 1. Instalá WordPress (local con LocalWP, o en tu hosting).
