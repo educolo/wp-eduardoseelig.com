@@ -10,7 +10,7 @@ function es_ui() {
     return [
         'es' => [
             'nav' => [
-                'enfoque' => 'Enfoque', 'trabajo' => 'Trabajo', 'cursos' => 'Cursos', 'cv' => 'CV', 'contacto' => 'Contacto',
+                'enfoque' => 'Enfoque', 'trabajo' => 'Trabajo', 'blog' => 'Blog', 'cv' => 'CV', 'contacto' => 'Contacto',
             ],
             'hero' => [
                 'tag' => 'Argentina · Remoto',
@@ -25,26 +25,26 @@ function es_ui() {
                 'enfoque' => '01 · Enfoque', 'enfoqueTitulo' => 'Construir producto, no solo software',
                 'trabajo' => '02 · Trabajo', 'trabajoTitulo' => 'Proyectos seleccionados',
                 'trayectoria' => '03 · Trayectoria', 'trayectoriaTitulo' => 'Dos décadas en la trinchera',
-                'cursos' => '04 · Compartir conocimiento', 'cursosTitulo' => 'Escribo y enseño lo que uso',
+                'blog' => '04 · Blog', 'blogTitulo' => 'Notas sobre ingeniería, producto e IA',
                 'contacto' => '05 · Contacto', 'contactoTitulo' => '¿Construyamos algo? Escríbeme y conversamos.',
                 'contactoTexto' => 'Punto de contacto profesional: cuéntame tu idea, tu producto o tu equipo y vemos juntos cómo aportar. Sin planes predefinidos ni paquetes: cada conversación empieza desde cero.',
             ],
             'cv' => [
-                'actualizado' => 'Curriculum vitae · actualizado 2025', 'descargar' => 'Descargar PDF',
+                'actualizado' => 'Curriculum vitae · actualizado 2026', 'descargar' => 'Descargar PDF',
                 'perfil' => 'Perfil', 'experiencia' => 'Experiencia profesional',
                 'formacion' => 'Formación y certificaciones', 'stack' => 'Stack y herramientas', 'enfoque' => 'Enfoque de trabajo',
             ],
-            'cursosPage' => [
-                'tag' => 'Compartir conocimiento', 'titulo' => 'Notas, guías y tutoriales',
-                'sub' => 'Comparto lo que aprendo construyendo producto: apuntes prácticos, tutoriales y reflexiones sobre ingeniería de software, IA y producto. Nada de relleno.',
-                'todos' => 'Todos', 'leer' => 'Leer / ver', 'vacio' => 'Todavía no hay contenidos en esta categoría.',
+            'blogPage' => [
+                'tag' => 'Blog', 'titulo' => 'Notas, guías y apuntes',
+                'sub' => 'Comparto lo que voy aprendiendo construyendo producto: ingeniería de software, IA y producto. Sin relleno.',
+                'leer' => 'Leer', 'volver' => 'Volver al blog', 'vacio' => 'Todavía no hay entradas publicadas. Pronto.',
             ],
             'footer' => [ 'contacto' => 'Contacto', 'redes' => 'Redes', 'secciones' => 'Secciones' ],
             'misc' => [ 'verMas' => 'Ver más', 'verTodos' => 'Ver todos' ],
         ],
         'en' => [
             'nav' => [
-                'enfoque' => 'Focus', 'trabajo' => 'Work', 'cursos' => 'Courses', 'cv' => 'CV', 'contacto' => 'Contact',
+                'enfoque' => 'Focus', 'trabajo' => 'Work', 'blog' => 'Blog', 'cv' => 'CV', 'contacto' => 'Contact',
             ],
             'hero' => [
                 'tag' => 'Argentina · Remote',
@@ -59,19 +59,19 @@ function es_ui() {
                 'enfoque' => '01 · Focus', 'enfoqueTitulo' => 'Building product, not just software',
                 'trabajo' => '02 · Work', 'trabajoTitulo' => 'Selected projects',
                 'trayectoria' => '03 · Journey', 'trayectoriaTitulo' => 'Two decades in the trenches',
-                'cursos' => '04 · Sharing knowledge', 'cursosTitulo' => 'I write and teach what I use',
+                'blog' => '04 · Blog', 'blogTitulo' => 'Notes on engineering, product & AI',
                 'contacto' => '05 · Contact', 'contactoTitulo' => "Let's build something? Write to me and let's talk.",
                 'contactoTexto' => "Professional point of contact: tell me about your idea, product or team and let's see how I can help. No predefined plans or packages: every conversation starts from scratch.",
             ],
             'cv' => [
-                'actualizado' => 'Curriculum vitae · updated 2025', 'descargar' => 'Download PDF',
+                'actualizado' => 'Curriculum vitae · updated 2026', 'descargar' => 'Download PDF',
                 'perfil' => 'Profile', 'experiencia' => 'Professional experience',
                 'formacion' => 'Education & certifications', 'stack' => 'Stack & tools', 'enfoque' => 'Approach to work',
             ],
-            'cursosPage' => [
-                'tag' => 'Sharing knowledge', 'titulo' => 'Notes, guides & tutorials',
-                'sub' => 'I share what I learn building product: practical notes, tutorials and reflections on software engineering, AI and product. No filler.',
-                'todos' => 'All', 'leer' => 'Read / view', 'vacio' => 'No content in this category yet.',
+            'blogPage' => [
+                'tag' => 'Blog', 'titulo' => 'Notes, guides & write-ups',
+                'sub' => 'I share what I learn building product: software engineering, AI and product. No filler.',
+                'leer' => 'Read', 'volver' => 'Back to blog', 'vacio' => 'No posts published yet. Coming soon.',
             ],
             'footer' => [ 'contacto' => 'Contact', 'redes' => 'Social', 'secciones' => 'Sections' ],
             'misc' => [ 'verMas' => 'See more', 'verTodos' => 'See all' ],

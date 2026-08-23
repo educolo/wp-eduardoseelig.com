@@ -38,10 +38,6 @@
             btn.classList.toggle('text-muted-foreground', !active);
             btn.setAttribute('aria-pressed', active ? 'true' : 'false');
         });
-
-        // Filtros de la página de Cursos usan el label en español como llave
-        // interna; si el usuario cambia a EN mientras un filtro no-"todos"
-        // está activo, lo dejamos activo (el texto visible ya cambia solo).
     }
 
     function setLang(lang) {
@@ -142,48 +138,6 @@
         });
     }
 
-    /* ---------- Filtro de Cursos ---------- */
-    function initCursosFiltro() {
-        var wrap = document.getElementById('es-cursos-filtros');
-        var grid = document.getElementById('es-cursos-grid');
-        var vacio = document.getElementById('es-cursos-vacio');
-        if (!wrap || !grid) return;
-
-        var buttons = wrap.querySelectorAll('.es-filtro-btn');
-        var cards = grid.querySelectorAll('.es-curso-card');
-
-        function setActive(btn) {
-            buttons.forEach(function (b) {
-                var active = b === btn;
-                b.classList.toggle('border-[hsl(var(--accent))]', active);
-                b.classList.toggle('bg-[hsl(var(--accent))]', active);
-                b.classList.toggle('text-accent-foreground', active);
-                b.classList.toggle('border-border', !active);
-                b.classList.toggle('text-muted-foreground', !active);
-            });
-        }
-
-        function applyFilter(formatoEs) {
-            var visibleCount = 0;
-            cards.forEach(function (card) {
-                var match = !formatoEs || card.getAttribute('data-formato-es') === formatoEs;
-                card.style.display = match ? '' : 'none';
-                if (match) visibleCount++;
-            });
-            if (vacio) vacio.classList.toggle('hidden', visibleCount !== 0);
-        }
-
-        buttons.forEach(function (btn) {
-            btn.addEventListener('click', function () {
-                setActive(btn);
-                applyFilter(btn.getAttribute('data-filtro-es') || null);
-            });
-        });
-
-        // Estado inicial: "Todos" activo
-        if (buttons.length) setActive(buttons[0]);
-    }
-
     /* ---------- Init ---------- */
     document.addEventListener('DOMContentLoaded', function () {
         document.body.classList.remove('js-pending');
@@ -192,6 +146,5 @@
         initMobileMenu();
         initReveal();
         initCountUp();
-        initCursosFiltro();
     });
 })();

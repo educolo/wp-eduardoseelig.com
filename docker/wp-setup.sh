@@ -62,7 +62,16 @@ ensure_page() {
 }
 
 ensure_page "cv" "CV" "page-cv.php"
-ensure_page "cursos" "Cursos" "page-cursos.php"
+ensure_page "blog" "Blog" "page-blog.php"
+
+# Post de ejemplo (solo la primera vez) para que el blog no arranque vacío.
+if [ -z "$(wp post list --post_type=post --field=ID --allow-root | head -n1)" ]; then
+  echo "==> Creando post de ejemplo del blog..."
+  wp post create --post_type=post --post_status=publish \
+    --post_title="Hola, blog" \
+    --post_content="<p>Primer apunte del blog. Pronto voy a ir sumando notas sobre ingeniería de software, producto e IA.</p>" \
+    --allow-root >/dev/null
+fi
 
 # Home estatica (el tema usa front-page.php igual, pero dejamos permalinks lindos)
 echo "==> Configurando permalinks..."
