@@ -5,11 +5,12 @@
  * el editor de WordPress: Página > Atributos de página > Plantilla > CV.
  */
 if ( ! defined( 'ABSPATH' ) ) exit;
-$perfil      = es_perfil();
-$experiencia = es_experiencia();
-$educacion   = es_educacion();
-$habilidades = es_habilidades();
-$enfoque     = es_enfoque();
+$perfil          = es_perfil();
+$experiencia     = es_experiencia();
+$educacion       = es_educacion();
+$certificaciones = es_certificaciones();
+$habilidades     = es_habilidades();
+$enfoque         = es_enfoque();
 
 get_header();
 ?>
@@ -66,6 +67,21 @@ get_header();
         <section class="border-t border-border py-8">
             <h2 class="font-mono-plex text-[11px] uppercase tracking-[0.2em] text-[hsl(var(--accent))]"><?php es_ui_t( 'cv.formacion' ); ?></h2>
             <div class="mt-5 space-y-4">
+                <?php foreach ( $certificaciones as $c ) : ?>
+                    <div class="grid gap-1 sm:grid-cols-[10rem_1fr]">
+                        <p class="font-mono-plex text-[11px] uppercase tracking-[0.14em] text-muted-foreground"><?php es_t( $c['periodo'] ); ?></p>
+                        <div>
+                            <h3 class="font-display text-base font-semibold"><?php echo esc_html( $c['titulo'] ); ?></h3>
+                            <p class="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-sm text-muted-foreground">
+                                <span><?php es_t( $c['emisor'] ); ?></span>
+                                <?php if ( ! empty( $c['enlace'] ) ) : ?>
+                                    <span aria-hidden="true">·</span>
+                                    <a href="<?php echo esc_url( $c['enlace'] ); ?>" target="_blank" rel="noreferrer" class="inline-flex items-center gap-1 hover:underline"><i data-lucide="badge-check" class="h-3.5 w-3.5 shrink-0"></i> <?php es_t( [ 'es' => 'Verificar', 'en' => 'Verify' ] ); ?></a>
+                                <?php endif; ?>
+                            </p>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
                 <?php foreach ( $educacion as $e ) : ?>
                     <div class="grid gap-1 sm:grid-cols-[10rem_1fr]">
                         <p class="font-mono-plex text-[11px] uppercase tracking-[0.14em] text-muted-foreground"><?php es_t( $e['periodo'] ); ?></p>

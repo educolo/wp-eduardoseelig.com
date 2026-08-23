@@ -2,7 +2,32 @@
 
 Tema a medida WordPress clásico (PHP + Tailwind compilado), para el sitio www.eduardoseelig.com
 
-## Instalación
+## Probar local con Docker (recomendado)
+Levanta MySQL + WordPress con el tema ya instalado, activado y las páginas
+`cv` y `cursos` creadas automáticamente.
+
+```bash
+docker compose up -d db wordpress   # levanta la base y WordPress
+docker compose run --rm wpcli       # instala WP, activa el tema y crea las páginas
+```
+
+- Sitio: http://localhost:8080
+- Admin: http://localhost:8080/wp-admin — usuario `admin`, contraseña `admin`
+
+Este repo se monta dentro del contenedor como `wp-content/themes/eduardo-seelig`,
+así que cualquier cambio en los `.php` se ve al recargar. Si tocás clases de
+Tailwind, recompilá el CSS (ver "Editar estilos").
+
+Para personalizar puertos/credenciales: `cp .env.example .env` y editá.
+
+Comandos útiles:
+```bash
+docker compose logs -f wordpress    # ver logs
+docker compose down                 # apagar (conserva datos)
+docker compose down -v              # apagar y borrar la base (empezar de cero)
+```
+
+## Instalación (sin Docker)
 1. Instalá WordPress (local con LocalWP, o en tu hosting).
 2. Copiá esta carpeta completa a `wp-content/themes/eduardo-seelig`.
 3. Activá el tema desde Apariencia > Temas.

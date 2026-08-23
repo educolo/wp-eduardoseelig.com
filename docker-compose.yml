@@ -1,0 +1,70 @@
+# Nombre de proyecto fijo: el stack (DB + volumenes) es el mismo sin importar
+# desde que worktree levantes compose. Asi la base persiste al cambiar de rama.
+name: eduseelig
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: es_wp_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_NAME:-wordpress}
+      MYSQL_USER: ${DB_USER:-wordpress}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-wordpress}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootpass}
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${DB_ROOT_PASSWORD:-rootpass}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  wordpress:
+    image: wordpress:6.5-php8.2-apache
+    container_name: es_wp_app
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "${WP_PORT:-8080}:80"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: ${DB_NAME:-wordpress}
+      WORDPRESS_DB_USER: ${DB_USER:-wordpress}
+      WORDPRESS_DB_PASSWORD: ${DB_PASSWORD:-wordpress}
+      WORDPRESS_DEBUG: 1
+    volumes:
+      - wp_core:/var/www/html
+      # Monta el tema desde THEME_SRC (default: el worktree actual). Para
+      # previsualizar otro worktree: THEME_SRC=/ruta/al/worktree docker compose up -d wordpress
+      - ${THEME_SRC:-./}:/var/www/html/wp-content/themes/eduardo-seelig
+
+  # Servicio one-shot: instala WordPress, activa el tema y crea las paginas cv/cursos.
+  wpcli:
+    image: wordpress:cli-php8.2
+    container_name: es_wp_cli
+    depends_on:
+      db:
+        condition: service_healthy
+      wordpress:
+        condition: service_started
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: ${DB_NAME:-wordpress}
+      WORDPRESS_DB_USER: ${DB_USER:-wordpress}
+      WORDPRESS_DB_PASSWORD: ${DB_PASSWORD:-wordpress}
+      WP_URL: http://localhost:${WP_PORT:-8080}
+      ADMIN_USER: ${ADMIN_USER:-admin}
+      ADMIN_PASS: ${ADMIN_PASS:-admin}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@example.com}
+    volumes:
+      - wp_core:/var/www/html
+      - ${THEME_SRC:-./}:/var/www/html/wp-content/themes/eduardo-seelig
+      - ./docker/wp-setup.sh:/wp-setup.sh:ro
+    entrypoint: ["sh", "/wp-setup.sh"]
+
+volumes:
+  db_data:
+  wp_core:

@@ -30,7 +30,7 @@
             <p class="font-mono-plex text-xs uppercase tracking-[0.18em] text-[hsl(var(--accent))]"><?php es_ui_t( 'footer.secciones' ); ?></p>
             <a href="<?php echo esc_url( home_url( '/#enfoque' ) ); ?>" class="block hover:underline"><?php es_ui_t( 'nav.enfoque' ); ?></a>
             <a href="<?php echo esc_url( home_url( '/#trabajo' ) ); ?>" class="block hover:underline"><?php es_ui_t( 'nav.trabajo' ); ?></a>
-            <a href="<?php echo esc_url( home_url( '/cursos' ) ); ?>" class="block hover:underline"><?php es_ui_t( 'nav.cursos' ); ?></a>
+            <a href="<?php echo esc_url( home_url( '/blog' ) ); ?>" class="block hover:underline"><?php es_ui_t( 'nav.blog' ); ?></a>
             <a href="<?php echo esc_url( home_url( '/cv' ) ); ?>" class="block hover:underline"><?php es_ui_t( 'nav.cv' ); ?></a>
         </div>
     </div>

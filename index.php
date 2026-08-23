@@ -1,9 +1,9 @@
 <?php
 /**
  * index.php — fallback requerido por WordPress.
- * El sitio usa front-page.php (home), page-cv.php y page-cursos.php como
- * plantillas específicas. Este archivo solo cubre el caso genérico
- * (por ejemplo, el listado del blog si en el futuro se activa).
+ * El sitio usa front-page.php (home), page-cv.php y page-blog.php como
+ * plantillas específicas. Este archivo cubre el caso genérico: archivos
+ * (categorías, tags), resultados de búsqueda y fallback del listado de posts.
  */
 if ( ! defined( 'ABSPATH' ) ) exit;
 get_header();
