@@ -1,0 +1,18 @@
+# Bloquea el acceso web directo a archivos de desarrollo / configuración
+# que el deploy copia dentro de la carpeta pública del tema.
+# Los .php del tema NO se bloquean: WordPress los incluye internamente.
+
+# Dotfiles (.env, .env.example, .gitignore, etc.)
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>
+
+# Archivos de tooling / infra que no se usan en producción
+<FilesMatch "\.(ya?ml|sh|md|lock|dist|log|example)$">
+    Require all denied
+</FilesMatch>
+
+# package.json / package-lock.json / tailwind.config.js
+<FilesMatch "^(package(-lock)?\.json|tailwind\.config\.js)$">
+    Require all denied
+</FilesMatch>
