@@ -27,7 +27,7 @@ get_header();
                     <span class="marker-underline inline-block es-fade-in" style="--d:0.18s"><?php es_t( [ 'es' => es_ui_get('hero.linea3','es'), 'en' => es_ui_get('hero.linea3','en') ] ); ?></span>
                 </h1>
                 <p class="mt-7 max-w-xl text-lg leading-relaxed text-muted-foreground">
-                    <?php es_t( $perfil['resumen'] ); ?>
+                    <?php es_t( $perfil['summary'] ); ?>
                 </p>
                 <div class="mt-9 flex flex-wrap gap-3">
                     <a href="#contacto" class="inline-flex min-h-[48px] items-center gap-2 bg-[hsl(var(--accent))] px-6 font-mono-plex text-xs uppercase tracking-[0.16em] text-accent-foreground transition-transform active:scale-[0.98]">
@@ -48,7 +48,7 @@ get_header();
 
             <div class="relative es-fade-in-scale">
                 <div class="absolute -bottom-4 -right-4 h-full w-full border-2 border-[hsl(var(--accent))]"></div>
-                <img src="<?php echo esc_url( $perfil['foto'] ); ?>" alt="<?php echo esc_attr( $perfil['nombre'] ); ?>" class="relative aspect-[3/4] w-full object-cover bg-secondary" loading="eager">
+                <img src="<?php echo esc_url( $perfil['photo'] ); ?>" alt="<?php echo esc_attr( $perfil['name'] ); ?>" class="relative aspect-[3/4] w-full object-cover bg-secondary" loading="eager">
             </div>
         </div>
 
@@ -100,11 +100,11 @@ get_header();
                                 <span class="grid h-11 w-11 shrink-0 place-items-center border border-[hsl(var(--ink))] transition-colors group-hover:bg-[hsl(var(--accent))] group-hover:text-accent-foreground">
                                     <i data-lucide="<?php echo esc_attr( $icon_map[ $s['id'] ] ); ?>" class="h-5 w-5"></i>
                                 </span>
-                                <h3 class="font-display text-xl font-semibold"><?php es_t( $s['titulo'] ); ?></h3>
+                                <h3 class="font-display text-xl font-semibold"><?php es_t( $s['title'] ); ?></h3>
                             </div>
-                            <p class="max-w-md text-base leading-relaxed text-muted-foreground md:text-lg"><?php es_t( $s['promesa'] ); ?></p>
+                            <p class="max-w-md text-base leading-relaxed text-muted-foreground md:text-lg"><?php es_t( $s['promise'] ); ?></p>
                             <?php
-                            es_t_list( $s['entregables']['es'], $s['entregables']['en'], 'ul', 'space-y-2 text-sm text-muted-foreground', function( $e ) {
+                            es_t_list( $s['deliverables']['es'], $s['deliverables']['en'], 'ul', 'space-y-2 text-sm text-muted-foreground', function( $e ) {
                                 echo '<li class="flex gap-2"><span class="mt-2 h-1 w-3 shrink-0 bg-[hsl(var(--accent))]"></span>' . esc_html( $e ) . '</li>';
                             } );
                             ?>
@@ -128,22 +128,26 @@ get_header();
                     <div class="es-reveal">
                         <article class="grid items-center gap-8 md:grid-cols-2 md:gap-14 <?php echo $i % 2 === 1 ? 'md:[&>figure]:order-2' : ''; ?>">
                             <figure class="group relative overflow-hidden bg-background">
-                                <div class="grid aspect-[3/2] w-full place-items-center bg-[hsl(var(--ink))] text-primary-foreground">
-                                    <span class="font-display text-5xl font-bold opacity-20"><?php echo esc_html( str_pad( $i + 1, 2, '0', STR_PAD_LEFT ) ); ?></span>
-                                </div>
-                                <figcaption class="absolute left-0 top-0 bg-[hsl(var(--ink))] px-3 py-1.5 font-mono-plex text-[11px] uppercase tracking-[0.16em] text-primary-foreground"><?php echo esc_html( $p['anio'] ); ?></figcaption>
+                                <?php if ( ! empty( $p['image'] ) ) : ?>
+                                    <img src="<?php echo esc_url( $p['image'] ); ?>" alt="<?php echo esc_attr( $p['title'] ); ?>" loading="lazy" class="aspect-[3/2] w-full object-cover grayscale transition-all duration-500 group-hover:grayscale-0 group-hover:scale-[1.03]" />
+                                <?php else : ?>
+                                    <div class="grid aspect-[3/2] w-full place-items-center bg-[hsl(var(--ink))] text-primary-foreground">
+                                        <span class="font-display text-5xl font-bold opacity-20"><?php echo esc_html( str_pad( $i + 1, 2, '0', STR_PAD_LEFT ) ); ?></span>
+                                    </div>
+                                <?php endif; ?>
+                                <figcaption class="absolute left-0 top-0 bg-[hsl(var(--ink))] px-3 py-1.5 font-mono-plex text-[11px] uppercase tracking-[0.16em] text-primary-foreground"><?php echo esc_html( $p['year'] ); ?></figcaption>
                             </figure>
                             <div>
-                                <p class="font-mono-plex text-[11px] uppercase tracking-[0.18em] text-muted-foreground"><?php es_t( $p['tipo'] ); ?></p>
-                                <h3 class="mt-3 font-display text-2xl font-bold sm:text-4xl"><?php echo esc_html( $p['titulo'] ); ?></h3>
-                                <p class="mt-4 max-w-lg text-base leading-relaxed text-muted-foreground"><?php es_t( $p['resumen'] ); ?></p>
+                                <p class="font-mono-plex text-[11px] uppercase tracking-[0.18em] text-muted-foreground"><?php es_t( $p['type'] ); ?></p>
+                                <h3 class="mt-3 font-display text-2xl font-bold sm:text-4xl"><?php echo esc_html( $p['title'] ); ?></h3>
+                                <p class="mt-4 max-w-lg text-base leading-relaxed text-muted-foreground"><?php es_t( $p['summary'] ); ?></p>
                                 <ul class="mt-5 flex flex-wrap gap-2">
                                     <?php foreach ( $p['stack'] as $st ) : ?>
                                         <li class="border border-border px-2.5 py-1 font-mono-plex text-[11px] uppercase tracking-[0.12em] text-muted-foreground"><?php echo esc_html( $st ); ?></li>
                                     <?php endforeach; ?>
                                 </ul>
-                                <?php if ( ! empty( $p['enlace'] ) ) : ?>
-                                    <a href="<?php echo esc_url( $p['enlace'] ); ?>" target="_blank" rel="noreferrer" class="mt-6 inline-flex items-center gap-2 font-mono-plex text-xs uppercase tracking-[0.16em] underline decoration-[hsl(var(--accent))] decoration-2 underline-offset-4">
+                                <?php if ( ! empty( $p['link'] ) ) : ?>
+                                    <a href="<?php echo esc_url( $p['link'] ); ?>" target="_blank" rel="noreferrer" class="mt-6 inline-flex items-center gap-2 font-mono-plex text-xs uppercase tracking-[0.16em] underline decoration-[hsl(var(--accent))] decoration-2 underline-offset-4">
                                         <?php es_ui_t( 'misc.verMas' ); ?> <i data-lucide="arrow-up-right" class="h-4 w-4"></i>
                                     </a>
                                 <?php endif; ?>
@@ -167,11 +171,11 @@ get_header();
                     <?php foreach ( $experiencia as $i => $e ) : ?>
                         <li class="es-reveal relative pb-10">
                             <span class="absolute -left-[1.9rem] top-1.5 h-2.5 w-2.5 bg-[hsl(var(--accent))]"></span>
-                            <p class="font-mono-plex text-[11px] uppercase tracking-[0.16em] text-muted-foreground"><?php es_t( $e['periodo'] ); ?></p>
-                            <h3 class="mt-1.5 font-display text-xl font-semibold"><?php es_t( $e['puesto'] ); ?></h3>
-                            <p class="text-sm text-muted-foreground"><?php es_t( $e['empresa'] ); ?></p>
+                            <p class="font-mono-plex text-[11px] uppercase tracking-[0.16em] text-muted-foreground"><?php es_t( $e['period'] ); ?></p>
+                            <h3 class="mt-1.5 font-display text-xl font-semibold"><?php es_t( $e['position'] ); ?></h3>
+                            <p class="text-sm text-muted-foreground"><?php es_t( $e['company'] ); ?></p>
                             <?php
-                            es_t_list( $e['detalles']['es'], $e['detalles']['en'], 'ul', 'mt-3 space-y-1.5 text-sm text-muted-foreground', function( $d ) {
+                            es_t_list( $e['details']['es'], $e['details']['en'], 'ul', 'mt-3 space-y-1.5 text-sm text-muted-foreground', function( $d ) {
                                 echo '<li>— ' . esc_html( $d ) . '</li>';
                             } );
                             ?>
