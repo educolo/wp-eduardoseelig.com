@@ -12,10 +12,10 @@
     <div class="mx-auto flex max-w-[90rem] items-center justify-between gap-6 px-5 py-4 md:px-10">
         <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="group flex items-center gap-3">
             <span class="grid h-9 w-9 place-items-center bg-[hsl(var(--ink))] font-display text-sm font-bold text-primary-foreground">
-                <?php echo esc_html( $perfil['iniciales'] ); ?>
+                <?php echo esc_html( $perfil['initials'] ); ?>
             </span>
             <span class="font-display text-sm font-semibold uppercase tracking-[0.18em]">
-                <?php echo esc_html( $perfil['nombre'] ); ?>
+                <?php echo esc_html( $perfil['name'] ); ?>
             </span>
         </a>
 

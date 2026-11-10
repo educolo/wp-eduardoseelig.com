@@ -2,8 +2,8 @@
 <footer class="no-print border-t border-border bg-[hsl(var(--ink))] text-[hsl(40_20%_92%)]">
     <div class="mx-auto grid max-w-[90rem] gap-10 px-5 py-14 md:grid-cols-[1.4fr_1fr_1fr_1fr] md:px-10">
         <div>
-            <p class="font-display text-2xl font-semibold"><?php echo esc_html( $perfil['nombre'] ); ?></p>
-            <p class="mt-2 max-w-sm text-sm text-[hsl(40_10%_70%)]"><?php es_t( $perfil['rol'] ); ?></p>
+            <p class="font-display text-2xl font-semibold"><?php echo esc_html( $perfil['name'] ); ?></p>
+            <p class="mt-2 max-w-sm text-sm text-[hsl(40_10%_70%)]"><?php es_t( $perfil['role'] ); ?></p>
         </div>
         <div class="space-y-3 text-sm">
             <p class="font-mono-plex text-xs uppercase tracking-[0.18em] text-[hsl(var(--accent))]"><?php es_ui_t( 'footer.contacto' ); ?></p>
@@ -11,7 +11,7 @@
                 <i data-lucide="mail" class="h-4 w-4"></i> <?php echo esc_html( $perfil['email'] ); ?>
             </a>
             <p class="flex items-center gap-2 text-[hsl(40_10%_70%)]">
-                <i data-lucide="map-pin" class="h-4 w-4"></i> <?php es_t( $perfil['ubicacion'] ); ?>
+                <i data-lucide="map-pin" class="h-4 w-4"></i> <?php es_t( $perfil['location'] ); ?>
             </p>
         </div>
         <div class="space-y-3 text-sm">
@@ -35,7 +35,7 @@
         </div>
     </div>
     <div class="border-t border-white/10 px-5 py-6 text-center font-mono-plex text-[11px] uppercase tracking-[0.18em] text-[hsl(40_8%_55%)] md:px-10">
-        © <?php echo esc_html( date( 'Y' ) ); ?> <?php echo esc_html( $perfil['nombre'] ); ?> · Argentina
+        © <?php echo esc_html( date( 'Y' ) ); ?> <?php echo esc_html( $perfil['name'] ); ?> · Argentina
     </div>
 </footer>
 

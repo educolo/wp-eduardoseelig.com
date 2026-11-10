@@ -15,16 +15,16 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 function es_perfil() {
     return [
-        'nombre'    => 'Eduardo Seelig',
-        'iniciales' => 'ES',
-        'ubicacion' => [ 'es' => 'Argentina · Remoto', 'en' => 'Argentina · Remote' ],
-        'rol'       => [ 'es' => 'Desarrollador de Software · Backend en Python', 'en' => 'Software Engineer · Python Backend' ],
+        'name'    => 'Eduardo Seelig',
+        'initials' => 'ES',
+        'location' => [ 'es' => 'Argentina · Remoto', 'en' => 'Argentina · Remote' ],
+        'role'       => [ 'es' => 'Desarrollador de Software · Backend en Python', 'en' => 'Software Engineer · Python Backend' ],
         'email'     => 'hola@eduardoseelig.com',
         'website'   => 'https://www.eduardoseelig.com',
         'github'    => 'https://github.com/educolo',
         'linkedin'  => 'https://www.linkedin.com/in/eduseelig/',
-        'foto'      => 'https://avatars.githubusercontent.com/u/446912?v=4',
-        'resumen'   => [
+        'photo'      => 'https://avatars.githubusercontent.com/u/446912?v=4',
+        'summary'   => [
             'es' => 'Desarrollador de software con 20 años de experiencia en IT y más de 10 especializado en desarrollo backend con Python (Django, Flask y FastAPI). Amplia experiencia diseñando sistemas backend escalables y de alto rendimiento, arquitecturas asíncronas, APIs REST y bases de datos relacionales. A lo largo de mi carrera trabajé en startups y consultoría de software, con roles que van de Backend Engineer a CTO, lo que me dio una comprensión sólida de los desafíos técnicos y de negocio. Más allá del desarrollo, contribuí en decisiones de arquitectura, estándares de ingeniería, calidad de código, flujos de trabajo y procesos de despliegue. Con experiencia en entornos ágiles (Scrum), mentoría técnica y colaboración cross-funcional con producto, ingeniería y clientes en inglés. Me apasiona construir software confiable, mantenible y seguro, ayudando a los equipos a mejorar sus prácticas y entregar productos de calidad.',
             'en' => 'Software Engineer with 20 years of experience in IT and over 10 years specializing in Python backend development using Django, Flask, and FastAPI. Extensive experience designing scalable, high-performance backend systems, asynchronous architectures, REST APIs, and relational databases. Throughout my career, I have worked in startups and software consulting, taking on roles ranging from Backend Engineer to CTO, which has given me a strong understanding of both technical and business challenges. Beyond software development, I have contributed to architecture decisions, engineering standards, code quality initiatives, development workflows, and deployment processes. Experienced in Agile (Scrum) environments, technical mentoring, and cross-functional collaboration with product, engineering, and clients in English. Passionate about building reliable, maintainable, and secure software while helping teams improve engineering practices and deliver high-quality products.',
         ],
@@ -36,12 +36,12 @@ function es_enfoque() {
         [
             'id' => 'producto',
             'icon' => 'layers',
-            'titulo' => [ 'es' => 'Producto antes que software', 'en' => 'Product before software' ],
-            'promesa' => [
+            'title' => [ 'es' => 'Producto antes que software', 'en' => 'Product before software' ],
+            'promise' => [
                 'es' => 'Acompaño la decisión de qué construir y por qué, antes de escribir una línea de código. El software sirve cuando responde a una necesidad real.',
                 'en' => 'I help decide what to build and why, before writing a single line of code. Software only matters when it answers a real need.',
             ],
-            'entregables' => [
+            'deliverables' => [
                 'es' => [ 'Descubrimiento y definición', 'Prototipos navegables', 'Roadmap técnico priorizado', 'Validación con usuarios' ],
                 'en' => [ 'Discovery & definition', 'Navigable prototypes', 'Prioritized technical roadmap', 'User validation' ],
             ],
@@ -49,12 +49,12 @@ function es_enfoque() {
         [
             'id' => 'ingenieria',
             'icon' => 'code',
-            'titulo' => [ 'es' => 'Ingeniería full stack', 'en' => 'Full-stack engineering' ],
-            'promesa' => [
+            'title' => [ 'es' => 'Ingeniería full stack', 'en' => 'Full-stack engineering' ],
+            'promise' => [
                 'es' => 'Arquitectura y desarrollo de plataformas web y APIs: código mantenible, decisiones documentadas y bases que escalan con el equipo.',
                 'en' => 'Architecture and development of web platforms and APIs: maintainable code, documented decisions and foundations that scale with the team.',
             ],
-            'entregables' => [
+            'deliverables' => [
                 'es' => [ 'Backend y APIs con Python (Django, FastAPI)', 'APIs y modelado de datos', 'Integraciones y automatizaciones', 'Revisión de arquitectura' ],
                 'en' => [ 'Backend & APIs with Python (Django, FastAPI)', 'APIs & data modeling', 'Integrations & automations', 'Architecture review' ],
             ],
@@ -62,12 +62,12 @@ function es_enfoque() {
         [
             'id' => 'ia',
             'icon' => 'sparkles',
-            'titulo' => [ 'es' => 'IA aplicada al producto', 'en' => 'AI applied to product' ],
-            'promesa' => [
+            'title' => [ 'es' => 'IA aplicada al producto', 'en' => 'AI applied to product' ],
+            'promise' => [
                 'es' => 'Integración de modelos de IA en flujos reales: no demos, sino funciones que ahorran tiempo o desbloquean capacidades nuevas.',
                 'en' => 'Integrating AI models into real workflows: not demos, but features that save time or unlock new capabilities.',
             ],
-            'entregables' => [
+            'deliverables' => [
                 'es' => [ 'Casos de uso con impacto medible', 'Integración de LLMs y APIs', 'Prompts y evaluación', 'Prototipos funcionales' ],
                 'en' => [ 'Use cases with measurable impact', 'LLM & API integration', 'Prompts & evaluation', 'Functional prototypes' ],
             ],
@@ -76,28 +76,40 @@ function es_enfoque() {
 }
 
 function es_proyectos() {
+    /*
+     * Campo opcional 'image':
+     *   - Para una imagen incluida en el tema, guardala en assets/img/ y usá:
+     *       ES_THEME_URI . '/assets/img/archivo.jpg'
+     *   - También sirve una URL absoluta (p. ej. de la biblioteca de medios).
+     *   - La imagen se muestra en blanco y negro y pasa a color al pasar el mouse.
+     *   - Si dejás el campo vacío ('') o lo borrás, se usa el recuadro negro con el
+     *     número, tal como está actualmente.
+     *   - Recomendado: JPG en 3:2 (~1200x800) y optimizado para que pese poco.
+     */
     return [
         [
-            'titulo' => 'Wellnest',
-            'tipo' => [ 'es' => 'Plataforma de salud · Backend Engineer', 'en' => 'Healthcare platform · Backend Engineer' ],
-            'anio' => '2025 — 2026',
-            'resumen' => [
+            'title' => 'Wellnest',
+            'image' => ES_THEME_URI . '/assets/img/wellnest.jpg', // URL de imagen opcional; vacío = recuadro negro
+            'type' => [ 'es' => 'Plataforma de salud · Backend Engineer', 'en' => 'Healthcare platform · Backend Engineer' ],
+            'year' => '2025 — 2026',
+            'summary' => [
                 'es' => 'Plataforma de salud HIPAA-compliant que integra dispositivos wearables para recolectar signos vitales, generar insights de salud y disparar alertas para pacientes, cuidadores y profesionales. Incluye una app móvil para pacientes y un portal web para médicos. Desarrollé las APIs REST asíncronas con FastAPI, la integración con wearables (Terra), pagos con Stripe y autenticación con Auth0.',
                 'en' => 'A HIPAA-compliant healthcare platform that integrates wearable devices to collect patient vital signs, generate health insights, and trigger alerts for patients, caregivers, and healthcare professionals. It includes a patient mobile app and a physician web portal. I built the asynchronous REST APIs with FastAPI, the wearable integration (Terra), payments with Stripe, and authentication with Auth0.',
             ],
             'stack' => [ 'Python', 'FastAPI', 'PostgreSQL', 'Celery', 'AWS' ],
-            'enlace' => 'https://www.hellowellnest.com/en',
+            'link' => 'https://www.hellowellnest.com/en',
         ],
         [
-            'titulo' => 'Psychopharmacology Institute',
-            'tipo' => [ 'es' => 'Plataforma de educación · CTO', 'en' => 'Education platform · CTO' ],
-            'anio' => '2020 — 2022',
-            'resumen' => [
+            'title' => 'Psychopharmacology Institute',
+            'image' => ES_THEME_URI . '/assets/img/psychopharmacology.jpg', // URL de imagen opcional; vacío = recuadro negro
+            'type' => [ 'es' => 'Plataforma de educación · CTO', 'en' => 'Education platform · CTO' ],
+            'year' => '2020 — 2022',
+            'summary' => [
                 'es' => 'Plataforma de educación e investigación en psicofarmacología. Como CTO lideré arquitectura, seguridad e infraestructura de un backend Python/Django con frontend React (AWS Elastic Beanstalk, S3 + CloudFront, MySQL RDS). Migré procesos pesados a AWS Lambda y llevé al equipo a reducir errores del 23% al 0,02% en picos de tráfico.',
                 'en' => 'An education and research platform on psychopharmacology. As CTO I led architecture, security, and infrastructure of a Python/Django backend with a React frontend (AWS Elastic Beanstalk, S3 + CloudFront, MySQL RDS). I moved heavy processes to AWS Lambda and led the team to reduce errors from 23% to 0.02% during traffic peaks.',
             ],
             'stack' => [ 'Python', 'Django', 'React', 'AWS', 'MySQL' ],
-            'enlace' => 'https://psychopharmacologyinstitute.com/',
+            'link' => 'https://psychopharmacologyinstitute.com/',
         ],
     ];
 }
@@ -105,10 +117,10 @@ function es_proyectos() {
 function es_experiencia() {
     return [
         [
-            'puesto' => [ 'es' => 'Backend Engineer', 'en' => 'Backend Engineer' ],
-            'empresa' => 'Rootstrap · Wellnest',
-            'periodo' => [ 'es' => 'Nov 2025 — Jul 2026', 'en' => 'Nov 2025 — Jul 2026' ],
-            'detalles' => [
+            'position' => [ 'es' => 'Backend Engineer', 'en' => 'Backend Engineer' ],
+            'company' => 'Rootstrap · Wellnest',
+            'period' => [ 'es' => 'Nov 2025 — Jul 2026', 'en' => 'Nov 2025 — Jul 2026' ],
+            'details' => [
                 'es' => [
                     'Desarrollo backend de una plataforma de salud HIPAA-compliant que integra dispositivos wearables para recolectar signos vitales, generar insights de salud y disparar alertas para pacientes, cuidadores y profesionales de la salud.',
                     'Diseño y desarrollo de APIs REST asíncronas de alto rendimiento con FastAPI y acceso asíncrono a base de datos.',
@@ -126,10 +138,10 @@ function es_experiencia() {
             ],
         ],
         [
-            'puesto' => [ 'es' => 'Fullstack Developer', 'en' => 'Fullstack Developer' ],
-            'empresa' => 'Rootstrap · Rickhouse / Consigliere',
-            'periodo' => [ 'es' => 'Ene 2025 — Oct 2025', 'en' => 'Jan 2025 — Oct 2025' ],
-            'detalles' => [
+            'position' => [ 'es' => 'Fullstack Developer', 'en' => 'Fullstack Developer' ],
+            'company' => 'Rootstrap · Rickhouse / Consigliere',
+            'period' => [ 'es' => 'Ene 2025 — Oct 2025', 'en' => 'Jan 2025 — Oct 2025' ],
+            'details' => [
                 'es' => [
                     'Herramienta de análisis de reseñas con ML/IA orientada al cliente, construida con Django/Python, PostgreSQL y frontend React.',
                     'Desarrollo y mantenimiento de APIs de datos: nuevas features y mejoras de rendimiento y usabilidad.',
@@ -147,10 +159,10 @@ function es_experiencia() {
             ],
         ],
         [
-            'puesto' => [ 'es' => 'Python Developer', 'en' => 'Python Developer' ],
-            'empresa' => 'Rootstrap · Kinimatic',
-            'periodo' => [ 'es' => 'Dic 2024 — Ene 2025', 'en' => 'Dec 2024 — Jan 2025' ],
-            'detalles' => [
+            'position' => [ 'es' => 'Python Developer', 'en' => 'Python Developer' ],
+            'company' => 'Rootstrap · Kinimatic',
+            'period' => [ 'es' => 'Dic 2024 — Ene 2025', 'en' => 'Dec 2024 — Jan 2025' ],
+            'details' => [
                 'es' => [
                     'Mantenimiento, mejoras y desarrollo de nuevas features en aplicaciones Python y Python/Flask; refactor y mejora de código.',
                     'Herramienta de data-pipeline para obtener datos de APIs de terceros o archivos e insertarlos en el sistema (app Python con lambdas como workers).',
@@ -164,10 +176,10 @@ function es_experiencia() {
             ],
         ],
         [
-            'puesto' => [ 'es' => 'Backend Developer', 'en' => 'Backend Developer' ],
-            'empresa' => 'KIU Systems',
-            'periodo' => [ 'es' => 'Ago 2023 — Dic 2024', 'en' => 'Aug 2023 — Dec 2024' ],
-            'detalles' => [
+            'position' => [ 'es' => 'Backend Developer', 'en' => 'Backend Developer' ],
+            'company' => 'KIU Systems',
+            'period' => [ 'es' => 'Ago 2023 — Dic 2024', 'en' => 'Aug 2023 — Dec 2024' ],
+            'details' => [
                 'es' => [
                     'Mantenimiento, mejoras y nuevas features en aplicaciones Django y Flask (proyecto Payments).',
                     'Integración de gateways de pago en una app de pagos Django, creando SDKs pequeños para interacciones eficientes.',
@@ -183,10 +195,10 @@ function es_experiencia() {
             ],
         ],
         [
-            'puesto' => [ 'es' => 'Full Stack Developer (freelance)', 'en' => 'Full Stack Developer (freelance)' ],
-            'empresa' => [ 'es' => 'Práctica independiente', 'en' => 'Independent practice' ],
-            'periodo' => [ 'es' => 'Ene 2003 — Dic 2023', 'en' => 'Jan 2003 — Dec 2023' ],
-            'detalles' => [
+            'position' => [ 'es' => 'Full Stack Developer (freelance)', 'en' => 'Full Stack Developer (freelance)' ],
+            'company' => [ 'es' => 'Práctica independiente', 'en' => 'Independent practice' ],
+            'period' => [ 'es' => 'Ene 2003 — Dic 2023', 'en' => 'Jan 2003 — Dec 2023' ],
+            'details' => [
                 'es' => [
                     'Desarrollo full stack con PHP, HTML, CSS, JS, MySQL, Python y PostgreSQL.',
                     'Responsable del desarrollo web frontend y backend para clientes de distintos rubros.',
@@ -198,10 +210,10 @@ function es_experiencia() {
             ],
         ],
         [
-            'puesto' => [ 'es' => 'Chief Technology Officer', 'en' => 'Chief Technology Officer' ],
-            'empresa' => 'Psychopharmacology Institute',
-            'periodo' => [ 'es' => 'May 2020 — Dic 2022', 'en' => 'May 2020 — Dec 2022' ],
-            'detalles' => [
+            'position' => [ 'es' => 'Chief Technology Officer', 'en' => 'Chief Technology Officer' ],
+            'company' => 'Psychopharmacology Institute',
+            'period' => [ 'es' => 'May 2020 — Dic 2022', 'en' => 'May 2020 — Dec 2022' ],
+            'details' => [
                 'es' => [
                     'Gestión y desarrollo: estándares de código, seguridad e infraestructura; diseño y desarrollo de soluciones en equipo con metodologías ágiles (SCRUM).',
                     'Stack: backend Python/Django y frontend React; monolito en AWS Elastic Beanstalk, React en S3 con CloudFront y datos en MySQL RDS.',
@@ -219,10 +231,10 @@ function es_experiencia() {
             ],
         ],
         [
-            'puesto' => [ 'es' => 'Backend Developer', 'en' => 'Backend Developer' ],
-            'empresa' => 'Intive · Nubi Wallet',
-            'periodo' => [ 'es' => 'Ago 2018 — May 2020', 'en' => 'Aug 2018 — May 2020' ],
-            'detalles' => [
+            'position' => [ 'es' => 'Backend Developer', 'en' => 'Backend Developer' ],
+            'company' => 'Intive · Nubi Wallet',
+            'period' => [ 'es' => 'Ago 2018 — May 2020', 'en' => 'Aug 2018 — May 2020' ],
+            'details' => [
                 'es' => [
                     'Backend de la app Nubi Wallet (proyectada para 4M de usuarios) con microservicios Python/Flask desplegados en AWS.',
                     'Diseño y mantenimiento de ~30 microservicios con RabbitMQ como broker, noSQL para lectura y SQL para escritura.',
@@ -240,10 +252,10 @@ function es_experiencia() {
             ],
         ],
         [
-            'puesto' => [ 'es' => 'Backend Developer', 'en' => 'Backend Developer' ],
-            'empresa' => 'Intive · Distll',
-            'periodo' => [ 'es' => 'Mar 2018 — Jul 2018', 'en' => 'Mar 2018 — Jul 2018' ],
-            'detalles' => [
+            'position' => [ 'es' => 'Backend Developer', 'en' => 'Backend Developer' ],
+            'company' => 'Intive · Distll',
+            'period' => [ 'es' => 'Mar 2018 — Jul 2018', 'en' => 'Mar 2018 — Jul 2018' ],
+            'details' => [
                 'es' => [
                     'Desarrollo rápido de apps móviles para clientes usando sus redes sociales como fuente de datos.',
                     'Backend Python/Flask integrado con una base de datos PostgreSQL.',
@@ -259,10 +271,10 @@ function es_experiencia() {
             ],
         ],
         [
-            'puesto' => [ 'es' => 'Fullstack Developer', 'en' => 'Fullstack Developer' ],
-            'empresa' => 'Baytree',
-            'periodo' => [ 'es' => 'Ago 2015 — Mar 2018', 'en' => 'Aug 2015 — Mar 2018' ],
-            'detalles' => [
+            'position' => [ 'es' => 'Fullstack Developer', 'en' => 'Fullstack Developer' ],
+            'company' => 'Baytree',
+            'period' => [ 'es' => 'Ago 2015 — Mar 2018', 'en' => 'Aug 2015 — Mar 2018' ],
+            'details' => [
                 'es' => [
                     'Desarrollo full stack y gestión de proyectos.',
                     'Stack: full stack PHP/MySQL/HTML/CSS/JS y backend Python/Django/PostgreSQL.',
@@ -274,10 +286,10 @@ function es_experiencia() {
             ],
         ],
         [
-            'puesto' => [ 'es' => 'Fullstack Developer', 'en' => 'Fullstack Developer' ],
-            'empresa' => 'DFCL Studio',
-            'periodo' => [ 'es' => 'Ene 2011 — Ago 2015', 'en' => 'Jan 2011 — Aug 2015' ],
-            'detalles' => [
+            'position' => [ 'es' => 'Fullstack Developer', 'en' => 'Fullstack Developer' ],
+            'company' => 'DFCL Studio',
+            'period' => [ 'es' => 'Ene 2011 — Ago 2015', 'en' => 'Jan 2011 — Aug 2015' ],
+            'details' => [
                 'es' => [
                     'Desarrollo full stack con PHP/MySQL/HTML/CSS/JS.',
                     'Gestión de proyectos.',
@@ -289,10 +301,10 @@ function es_experiencia() {
             ],
         ],
         [
-            'puesto' => [ 'es' => 'Developer', 'en' => 'Developer' ],
-            'empresa' => 'Arsmedia',
-            'periodo' => [ 'es' => 'Feb 2003 — Mar 2004', 'en' => 'Feb 2003 — Mar 2004' ],
-            'detalles' => [
+            'position' => [ 'es' => 'Developer', 'en' => 'Developer' ],
+            'company' => 'Arsmedia',
+            'period' => [ 'es' => 'Feb 2003 — Mar 2004', 'en' => 'Feb 2003 — Mar 2004' ],
+            'details' => [
                 'es' => [
                     'Desarrollo web frontend y backend: OOP, PHP, MySQL, JavaScript y APIs REST.',
                     'Diseño de sitios web.',
@@ -309,14 +321,14 @@ function es_experiencia() {
 function es_educacion() {
     return [
         [
-            'titulo' => [ 'es' => 'Técnico en Comunicación Multimedial · Diseño Multimedia', 'en' => 'Multimedia Communication Technician · Multimedia Design' ],
-            'lugar' => 'Escuela Da Vinci',
-            'periodo' => '2005 — 2010',
+            'title' => [ 'es' => 'Técnico en Comunicación Multimedial · Diseño Multimedia', 'en' => 'Multimedia Communication Technician · Multimedia Design' ],
+            'place' => 'Escuela Da Vinci',
+            'period' => '2005 — 2010',
         ],
         [
-            'titulo' => [ 'es' => 'Ingeniería en Sistemas', 'en' => 'Systems Engineering' ],
-            'lugar' => 'Universidad Tecnológica Nacional',
-            'periodo' => '2000 — 2002',
+            'title' => [ 'es' => 'Ingeniería en Sistemas', 'en' => 'Systems Engineering' ],
+            'place' => 'Universidad Tecnológica Nacional',
+            'period' => '2000 — 2002',
         ],
     ];
 }
@@ -324,10 +336,10 @@ function es_educacion() {
 function es_certificaciones() {
     return [
         [
-            'titulo'  => 'Claude Certified Architect — Foundations',
-            'emisor'  => 'Anthropic',
-            'periodo' => [ 'es' => 'Ago 2026', 'en' => 'Aug 2026' ],
-            'enlace'  => 'https://www.credly.com/badges/62d12055-cbcf-4935-a2ed-d4817c438a02',
+            'title'  => 'Claude Certified Architect — Foundations',
+            'issuer'  => 'Anthropic',
+            'period' => [ 'es' => 'Ago 2026', 'en' => 'Aug 2026' ],
+            'link'  => 'https://www.credly.com/badges/62d12055-cbcf-4935-a2ed-d4817c438a02',
         ],
     ];
 }
