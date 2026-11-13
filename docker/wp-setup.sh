@@ -78,6 +78,90 @@ echo "==> Configurando permalinks..."
 wp rewrite structure '/%postname%/' --hard --allow-root >/dev/null 2>&1 || true
 wp option update show_on_front posts --allow-root >/dev/null 2>&1 || true
 
+# ---------------------------------------------------------------------------
+# Idiomas (Polylang): ES por defecto sin prefijo (/), EN en /en/, deteccion
+# del idioma del navegador en la primera visita a la home.
+# En produccion esto se configura a mano desde el admin (ver README).
+# ---------------------------------------------------------------------------
+echo "==> Instalando idioma es_AR y Polylang..."
+wp language core install es_AR --activate --allow-root >/dev/null 2>&1 || true
+wp plugin is-installed polylang --allow-root || wp plugin install polylang --allow-root
+wp plugin activate polylang --allow-root >/dev/null
+
+echo "==> Configurando Polylang..."
+# Cualquier fallo corta el script (WP_CLI::error sale con codigo != 0 y set -e
+# lo propaga), en vez de seguir con datos invalidos y decir "Listo".
+wp eval --allow-root '
+$check = function ( $result, $what ) {
+    if ( is_wp_error( $result ) && $result->has_errors() ) {
+        WP_CLI::error( "$what: " . $result->get_error_message() );
+    }
+    if ( ! $result ) {
+        WP_CLI::error( "$what: fallo sin detalle" );
+    }
+    return $result;
+};
+if ( ! function_exists( "PLL" ) || ! function_exists( "pll_set_post_language" ) ) {
+    WP_CLI::error( "Polylang no esta cargado" );
+}
+$m = PLL()->model;
+if ( ! $m->languages->get( "es" ) ) {
+    $check( $m->languages->add( [ "locale" => "es_AR", "slug" => "es", "name" => "Español", "flag" => "ar", "term_group" => 0 ] ), "Agregar idioma es" );
+}
+if ( ! $m->languages->get( "en" ) ) {
+    $check( $m->languages->add( [ "locale" => "en_US", "slug" => "en", "name" => "English", "flag" => "us", "term_group" => 1 ] ), "Agregar idioma en" );
+}
+$o = PLL()->options;
+foreach ( [
+    "default_lang" => "es",
+    "force_lang"   => 1,     // idioma desde el directorio (/en/)
+    "hide_default" => true,  // sin /es/ para el idioma por defecto
+    "rewrite"      => true,  // /en/ y no /language/en/
+    "browser"      => true,  // detectar idioma del navegador en la home
+] as $key => $value ) {
+    $errors = $o->set( $key, $value );
+    if ( $errors->has_errors() ) {
+        WP_CLI::error( "Opcion $key: " . $errors->get_error_message() );
+    }
+}
+$o->save();
+
+// Todo el contenido sin idioma pasa a ES (incluye el post de ejemplo y las paginas).
+foreach ( get_posts( [ "post_type" => [ "post", "page" ], "post_status" => "any", "numberposts" => -1, "fields" => "ids" ] ) as $id ) {
+    if ( ! pll_get_post_language( $id ) ) {
+        pll_set_post_language( $id, "es" );
+    }
+}
+
+// Traducciones EN de las paginas del tema (mismo template, slug propio:
+// Polylang gratis no permite el mismo slug en dos idiomas).
+$pages = [ "cv" => [ "resume", "Resume", "page-cv.php" ], "blog" => [ "notes", "Notes", "page-blog.php" ] ];
+foreach ( $pages as $es_slug => list( $en_slug, $en_title, $tpl ) ) {
+    $es = get_page_by_path( $es_slug );
+    if ( ! $es || pll_get_post( $es->ID, "en" ) ) {
+        continue;
+    }
+    $en_id = $check( wp_insert_post( [ "post_type" => "page", "post_status" => "publish", "post_title" => $en_title, "post_name" => $en_slug ], true ), "Crear pagina $en_slug" );
+    update_post_meta( $en_id, "_wp_page_template", $tpl );
+    pll_set_post_language( $en_id, "en" );
+    pll_save_post_translations( [ "es" => $es->ID, "en" => $en_id ] );
+    echo "Pagina EN creada: /en/$en_slug/\n";
+}
+
+// Verificacion final: los dos idiomas existen y las paginas tienen su traduccion EN.
+if ( [ "es", "en" ] !== pll_languages_list() ) {
+    WP_CLI::error( "Idiomas inesperados: " . implode( ",", pll_languages_list() ) );
+}
+foreach ( array_keys( $pages ) as $es_slug ) {
+    $es = get_page_by_path( $es_slug );
+    if ( $es && ! pll_get_post( $es->ID, "en" ) ) {
+        WP_CLI::error( "La pagina $es_slug no tiene traduccion EN" );
+    }
+}
+WP_CLI::success( "Polylang configurado" );
+'
+wp rewrite flush --hard --allow-root >/dev/null 2>&1 || true
+
 echo ""
 echo "======================================================================"
 echo "  Listo. WordPress corriendo en: $WP_URL"

@@ -28,10 +28,10 @@
         </div>
         <div class="space-y-3 text-sm">
             <p class="font-mono-plex text-xs uppercase tracking-[0.18em] text-[hsl(var(--accent))]"><?php es_ui_t( 'footer.secciones' ); ?></p>
-            <a href="<?php echo esc_url( home_url( '/#enfoque' ) ); ?>" class="block hover:underline"><?php es_ui_t( 'nav.enfoque' ); ?></a>
-            <a href="<?php echo esc_url( home_url( '/#trabajo' ) ); ?>" class="block hover:underline"><?php es_ui_t( 'nav.trabajo' ); ?></a>
-            <a href="<?php echo esc_url( home_url( '/blog' ) ); ?>" class="block hover:underline"><?php es_ui_t( 'nav.blog' ); ?></a>
-            <a href="<?php echo esc_url( home_url( '/cv' ) ); ?>" class="block hover:underline"><?php es_ui_t( 'nav.cv' ); ?></a>
+            <a href="<?php echo esc_url( es_home_url( 'enfoque' ) ); ?>" class="block hover:underline"><?php es_ui_t( 'nav.enfoque' ); ?></a>
+            <a href="<?php echo esc_url( es_home_url( 'trabajo' ) ); ?>" class="block hover:underline"><?php es_ui_t( 'nav.trabajo' ); ?></a>
+            <a href="<?php echo esc_url( es_page_url( 'blog' ) ); ?>" class="block hover:underline"><?php es_ui_t( 'nav.blog' ); ?></a>
+            <a href="<?php echo esc_url( es_page_url( 'cv' ) ); ?>" class="block hover:underline"><?php es_ui_t( 'nav.cv' ); ?></a>
         </div>
     </div>
     <div class="border-t border-white/10 px-5 py-6 text-center font-mono-plex text-[11px] uppercase tracking-[0.18em] text-[hsl(40_8%_55%)] md:px-10">
