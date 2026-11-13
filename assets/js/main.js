@@ -1,7 +1,6 @@
 (function () {
     'use strict';
 
-    var STORAGE_KEY = 'es-lang';
     var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     /* ---------- Íconos (lucide) ---------- */
@@ -9,49 +8,6 @@
         if (window.lucide && typeof window.lucide.createIcons === 'function') {
             window.lucide.createIcons();
         }
-    }
-
-    /* ---------- Idioma ES/EN ---------- */
-    function getLang() {
-        try {
-            var saved = localStorage.getItem(STORAGE_KEY);
-            if (saved === 'es' || saved === 'en') return saved;
-        } catch (e) {}
-        return 'es';
-    }
-
-    function applyLang(lang) {
-        document.documentElement.lang = lang;
-
-        document.querySelectorAll('.i18n').forEach(function (el) {
-            if (el.getAttribute('data-lang') === lang) {
-                el.removeAttribute('hidden');
-            } else {
-                el.setAttribute('hidden', '');
-            }
-        });
-
-        document.querySelectorAll('.es-lang-btn').forEach(function (btn) {
-            var active = btn.getAttribute('data-set-lang') === lang;
-            btn.classList.toggle('bg-[hsl(var(--ink))]', active);
-            btn.classList.toggle('text-primary-foreground', active);
-            btn.classList.toggle('text-muted-foreground', !active);
-            btn.setAttribute('aria-pressed', active ? 'true' : 'false');
-        });
-    }
-
-    function setLang(lang) {
-        try { localStorage.setItem(STORAGE_KEY, lang); } catch (e) {}
-        applyLang(lang);
-    }
-
-    function initLangToggle() {
-        document.querySelectorAll('.es-lang-btn').forEach(function (btn) {
-            btn.addEventListener('click', function () {
-                setLang(btn.getAttribute('data-set-lang'));
-            });
-        });
-        applyLang(getLang());
     }
 
     /* ---------- Menú móvil ---------- */
@@ -142,7 +98,6 @@
     document.addEventListener('DOMContentLoaded', function () {
         document.body.classList.remove('js-pending');
         renderIcons();
-        initLangToggle();
         initMobileMenu();
         initReveal();
         initCountUp();

@@ -78,6 +78,57 @@ echo "==> Configurando permalinks..."
 wp rewrite structure '/%postname%/' --hard --allow-root >/dev/null 2>&1 || true
 wp option update show_on_front posts --allow-root >/dev/null 2>&1 || true
 
+# ---------------------------------------------------------------------------
+# Idiomas (Polylang): ES por defecto sin prefijo (/), EN en /en/, deteccion
+# del idioma del navegador en la primera visita a la home.
+# En produccion esto se configura a mano desde el admin (ver README).
+# ---------------------------------------------------------------------------
+echo "==> Instalando idioma es_AR y Polylang..."
+wp language core install es_AR --allow-root >/dev/null 2>&1 || true
+wp plugin is-installed polylang --allow-root || wp plugin install polylang --allow-root
+wp plugin activate polylang --allow-root >/dev/null
+
+echo "==> Configurando Polylang..."
+wp eval --allow-root '
+$m = PLL()->model;
+if ( ! $m->languages->get( "es" ) ) {
+    $m->languages->add( [ "locale" => "es_AR", "slug" => "es", "name" => "Español", "flag" => "ar", "term_group" => 0 ] );
+}
+if ( ! $m->languages->get( "en" ) ) {
+    $m->languages->add( [ "locale" => "en_US", "slug" => "en", "name" => "English", "flag" => "us", "term_group" => 1 ] );
+}
+$o = PLL()->options;
+$o->set( "default_lang", "es" );
+$o->set( "force_lang", 1 );        // idioma desde el directorio (/en/)
+$o->set( "hide_default", true );   // sin /es/ para el idioma por defecto
+$o->set( "rewrite", true );        // /en/ y no /language/en/
+$o->set( "browser", true );        // detectar idioma del navegador en la home
+$o->save();
+
+// Todo el contenido sin idioma pasa a ES (incluye el post de ejemplo y las paginas).
+foreach ( get_posts( [ "post_type" => [ "post", "page" ], "post_status" => "any", "numberposts" => -1, "fields" => "ids" ] ) as $id ) {
+    if ( ! pll_get_post_language( $id ) ) {
+        pll_set_post_language( $id, "es" );
+    }
+}
+
+// Traducciones EN de las paginas del tema (mismo template, slug propio:
+// Polylang gratis no permite el mismo slug en dos idiomas).
+$pages = [ "cv" => [ "resume", "Resume", "page-cv.php" ], "blog" => [ "notes", "Notes", "page-blog.php" ] ];
+foreach ( $pages as $es_slug => list( $en_slug, $en_title, $tpl ) ) {
+    $es = get_page_by_path( $es_slug );
+    if ( ! $es || pll_get_post( $es->ID, "en" ) ) {
+        continue;
+    }
+    $en_id = wp_insert_post( [ "post_type" => "page", "post_status" => "publish", "post_title" => $en_title, "post_name" => $en_slug ] );
+    update_post_meta( $en_id, "_wp_page_template", $tpl );
+    pll_set_post_language( $en_id, "en" );
+    pll_save_post_translations( [ "es" => $es->ID, "en" => $en_id ] );
+    echo "Pagina EN creada: /en/$en_slug/\n";
+}
+'
+wp rewrite flush --hard --allow-root >/dev/null 2>&1 || true
+
 echo ""
 echo "======================================================================"
 echo "  Listo. WordPress corriendo en: $WP_URL"

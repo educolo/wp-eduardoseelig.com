@@ -36,7 +36,7 @@ get_header();
                     <a href="#trabajo" class="inline-flex min-h-[48px] items-center gap-2 border border-[hsl(var(--ink))] px-6 font-mono-plex text-xs uppercase tracking-[0.16em] transition-colors hover:bg-secondary">
                         <?php es_ui_t( 'hero.ctaTrabajo' ); ?>
                     </a>
-                    <a href="<?php echo esc_url( home_url( '/cv' ) ); ?>" class="inline-flex min-h-[48px] items-center gap-2 px-2 font-mono-plex text-xs uppercase tracking-[0.16em] text-muted-foreground underline decoration-[hsl(var(--accent))] decoration-2 underline-offset-4">
+                    <a href="<?php echo esc_url( es_page_url( 'cv' ) ); ?>" class="inline-flex min-h-[48px] items-center gap-2 px-2 font-mono-plex text-xs uppercase tracking-[0.16em] text-muted-foreground underline decoration-[hsl(var(--accent))] decoration-2 underline-offset-4">
                         <i data-lucide="download" class="h-4 w-4"></i> <?php es_ui_t( 'hero.cvLink' ); ?>
                     </a>
                 </div>
@@ -193,7 +193,7 @@ get_header();
                     <p class="mt-3 text-sm text-[hsl(40_10%_70%)]">
                         <?php es_t( [ 'es' => 'Experiencia, formación y stack en una sola página.', 'en' => 'Experience, education and stack on a single page.' ] ); ?>
                     </p>
-                    <a href="<?php echo esc_url( home_url( '/cv' ) ); ?>" class="mt-6 inline-flex min-h-[48px] items-center gap-2 bg-[hsl(var(--accent))] px-5 font-mono-plex text-xs uppercase tracking-[0.16em] text-accent-foreground transition-transform active:scale-[0.98]">
+                    <a href="<?php echo esc_url( es_page_url( 'cv' ) ); ?>" class="mt-6 inline-flex min-h-[48px] items-center gap-2 bg-[hsl(var(--accent))] px-5 font-mono-plex text-xs uppercase tracking-[0.16em] text-accent-foreground transition-transform active:scale-[0.98]">
                         <i data-lucide="download" class="h-4 w-4"></i> <?php es_ui_t( 'cv.descargar' ); ?>
                     </a>
                     <ul class="mt-8 flex flex-wrap gap-2">
@@ -214,7 +214,7 @@ get_header();
                     <p class="font-mono-plex text-xs uppercase tracking-[0.24em] text-[hsl(var(--accent))]"><?php es_ui_t( 'secciones.blog' ); ?></p>
                     <h2 class="mt-4 max-w-2xl font-display text-3xl font-bold leading-tight sm:text-5xl"><?php es_ui_t( 'secciones.blogTitulo' ); ?></h2>
                 </div>
-                <a href="<?php echo esc_url( home_url( '/blog' ) ); ?>" class="inline-flex items-center gap-2 font-mono-plex text-xs uppercase tracking-[0.16em] underline decoration-[hsl(var(--accent))] decoration-2 underline-offset-4">
+                <a href="<?php echo esc_url( es_page_url( 'blog' ) ); ?>" class="inline-flex items-center gap-2 font-mono-plex text-xs uppercase tracking-[0.16em] underline decoration-[hsl(var(--accent))] decoration-2 underline-offset-4">
                     <?php es_ui_t( 'misc.verTodos' ); ?> <i data-lucide="arrow-right" class="h-4 w-4"></i>
                 </a>
             </div>
@@ -222,11 +222,11 @@ get_header();
             <?php $es_home_posts = new WP_Query( [ 'post_type' => 'post', 'posts_per_page' => 2, 'ignore_sticky_posts' => true ] ); ?>
             <?php if ( $es_home_posts->have_posts() ) : ?>
                 <div class="es-reveal mt-12 grid gap-px border border-border bg-border md:grid-cols-2">
-                    <?php while ( $es_home_posts->have_posts() ) : $es_home_posts->the_post(); $t = es_post_titles(); $ex = es_post_excerpts(); ?>
+                    <?php while ( $es_home_posts->have_posts() ) : $es_home_posts->the_post(); ?>
                         <article class="flex h-full flex-col bg-background p-8">
                             <p class="font-mono-plex text-[11px] uppercase tracking-[0.16em] text-muted-foreground"><?php echo esc_html( get_the_date() ); ?></p>
-                            <h3 class="mt-4 font-display text-xl font-semibold leading-snug"><a href="<?php the_permalink(); ?>" class="hover:text-[hsl(var(--accent))]"><?php es_t( $t ); ?></a></h3>
-                            <p class="mt-3 text-sm leading-relaxed text-muted-foreground"><?php es_t( $ex ); ?></p>
+                            <h3 class="mt-4 font-display text-xl font-semibold leading-snug"><a href="<?php the_permalink(); ?>" class="hover:text-[hsl(var(--accent))]"><?php the_title(); ?></a></h3>
+                            <p class="mt-3 text-sm leading-relaxed text-muted-foreground"><?php echo esc_html( get_the_excerpt() ); ?></p>
                             <a href="<?php the_permalink(); ?>" class="mt-auto inline-flex items-center gap-2 pt-7 font-mono-plex text-xs uppercase tracking-[0.16em] underline decoration-[hsl(var(--accent))] decoration-2 underline-offset-4">
                                 <?php es_ui_t( 'blogPage.leer' ); ?> <i data-lucide="arrow-up-right" class="h-4 w-4"></i>
                             </a>
