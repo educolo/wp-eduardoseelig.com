@@ -35,7 +35,7 @@ get_header();
                 <span class="flex items-center gap-2"><i data-lucide="map-pin" class="h-4 w-4"></i> <?php es_t( $perfil['location'] ); ?></span>
                 <a href="<?php echo esc_url( $perfil['linkedin'] ); ?>" target="_blank" rel="noreferrer" class="flex items-center gap-2 hover:underline"><i data-lucide="linkedin" class="h-4 w-4"></i> LinkedIn</a>
                 <a href="<?php echo esc_url( $perfil['github'] ); ?>" target="_blank" rel="noreferrer" class="flex items-center gap-2 hover:underline"><i data-lucide="github" class="h-4 w-4"></i> GitHub</a>
-                <a href="<?php echo esc_url( $perfil['website'] ); ?>" target="_blank" rel="noreferrer" class="flex items-center gap-2 hover:underline"><i data-lucide="globe" class="h-4 w-4"></i> eduardoseelig.com.ar</a>
+                <a href="<?php echo esc_url( $perfil['website'] ); ?>" target="_blank" rel="noreferrer" class="flex items-center gap-2 hover:underline"><i data-lucide="globe" class="h-4 w-4"></i> eduardoseelig.com</a>
             </div>
         </header>
 

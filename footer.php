@@ -23,7 +23,7 @@
                 <i data-lucide="github" class="h-4 w-4"></i> GitHub
             </a>
             <a href="<?php echo esc_url( $perfil['website'] ); ?>" target="_blank" rel="noreferrer" class="flex items-center gap-2 hover:underline">
-                <i data-lucide="globe" class="h-4 w-4"></i> eduardoseelig.com.ar
+                <i data-lucide="globe" class="h-4 w-4"></i> eduardoseelig.com
             </a>
         </div>
         <div class="space-y-3 text-sm">
