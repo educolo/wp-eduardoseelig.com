@@ -30,10 +30,10 @@ get_header();
                     <?php es_t( $perfil['summary'] ); ?>
                 </p>
                 <div class="mt-9 flex flex-wrap gap-3">
-                    <a href="#contacto" class="inline-flex min-h-[48px] items-center gap-2 bg-[hsl(var(--accent))] px-6 font-mono-plex text-xs uppercase tracking-[0.16em] text-accent-foreground transition-transform active:scale-[0.98]">
+                    <a href="#<?php echo esc_attr( es_anchor( 'contacto' ) ); ?>" class="inline-flex min-h-[48px] items-center gap-2 bg-[hsl(var(--accent))] px-6 font-mono-plex text-xs uppercase tracking-[0.16em] text-accent-foreground transition-transform active:scale-[0.98]">
                         <?php es_ui_t( 'hero.ctaContacto' ); ?> <i data-lucide="arrow-up-right" class="h-4 w-4"></i>
                     </a>
-                    <a href="#trabajo" class="inline-flex min-h-[48px] items-center gap-2 border border-[hsl(var(--ink))] px-6 font-mono-plex text-xs uppercase tracking-[0.16em] transition-colors hover:bg-secondary">
+                    <a href="#<?php echo esc_attr( es_anchor( 'trabajo' ) ); ?>" class="inline-flex min-h-[48px] items-center gap-2 border border-[hsl(var(--ink))] px-6 font-mono-plex text-xs uppercase tracking-[0.16em] transition-colors hover:bg-secondary">
                         <?php es_ui_t( 'hero.ctaTrabajo' ); ?>
                     </a>
                     <a href="<?php echo esc_url( es_page_url( 'cv' ) ); ?>" class="inline-flex min-h-[48px] items-center gap-2 px-2 font-mono-plex text-xs uppercase tracking-[0.16em] text-muted-foreground underline decoration-[hsl(var(--accent))] decoration-2 underline-offset-4">
@@ -85,7 +85,7 @@ get_header();
     </div>
 
     <!-- ENFOQUE -->
-    <section id="enfoque" class="scroll-mt-24 border-b border-border">
+    <section id="<?php echo esc_attr( es_anchor( 'enfoque' ) ); ?>" class="scroll-mt-24 border-b border-border">
         <div class="mx-auto max-w-[80rem] px-5 py-20 md:px-10">
             <div class="es-reveal">
                 <p class="font-mono-plex text-xs uppercase tracking-[0.24em] text-[hsl(var(--accent))]"><?php es_ui_t( 'secciones.enfoque' ); ?></p>
@@ -116,7 +116,7 @@ get_header();
     </section>
 
     <!-- TRABAJO -->
-    <section id="trabajo" class="scroll-mt-24 border-b border-border bg-secondary/40">
+    <section id="<?php echo esc_attr( es_anchor( 'trabajo' ) ); ?>" class="scroll-mt-24 border-b border-border bg-secondary/40">
         <div class="mx-auto max-w-[86rem] px-5 py-20 md:px-10">
             <div class="es-reveal">
                 <p class="font-mono-plex text-xs uppercase tracking-[0.24em] text-[hsl(var(--accent))]"><?php es_ui_t( 'secciones.trabajo' ); ?></p>
@@ -238,7 +238,7 @@ get_header();
     </section>
 
     <!-- CONTACTO -->
-    <section id="contacto" class="scroll-mt-24">
+    <section id="<?php echo esc_attr( es_anchor( 'contacto' ) ); ?>" class="scroll-mt-24">
         <div class="mx-auto max-w-[72rem] px-5 py-24 md:px-10">
             <div class="es-reveal">
                 <p class="font-mono-plex text-xs uppercase tracking-[0.24em] text-[hsl(var(--accent))]"><?php es_ui_t( 'secciones.contacto' ); ?></p>

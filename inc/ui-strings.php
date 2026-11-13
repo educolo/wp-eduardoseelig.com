@@ -41,6 +41,8 @@ function es_ui() {
             ],
             'footer' => [ 'contacto' => 'Contacto', 'redes' => 'Redes', 'secciones' => 'Secciones' ],
             'misc' => [ 'verMas' => 'Ver más', 'verTodos' => 'Ver todos' ],
+            // Anclas (id) de las secciones de la home.
+            'anclas' => [ 'enfoque' => 'enfoque', 'trabajo' => 'trabajo', 'contacto' => 'contacto' ],
         ],
         'en' => [
             'nav' => [
@@ -75,6 +77,7 @@ function es_ui() {
             ],
             'footer' => [ 'contacto' => 'Contact', 'redes' => 'Social', 'secciones' => 'Sections' ],
             'misc' => [ 'verMas' => 'See more', 'verTodos' => 'See all' ],
+            'anclas' => [ 'enfoque' => 'focus', 'trabajo' => 'work', 'contacto' => 'contact' ],
         ],
     ];
 }

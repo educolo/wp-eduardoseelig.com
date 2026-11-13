@@ -87,10 +87,15 @@ function es_ui_get( $path, $lang = null ) {
  * URLs en el idioma actual
  * ------------------------------------------------------------------------- */
 
-/** Home del idioma actual (/ o /en/), con un ancla opcional ("#enfoque"). */
-function es_home_url( $anchor = '' ) {
+/** Ancla (id) de una sección de la home en el idioma actual: es_anchor( 'enfoque' ) => "focus" en inglés. */
+function es_anchor( $section ) {
+    return es_ui_get( 'anclas.' . $section ) ?: $section;
+}
+
+/** Home del idioma actual (/ o /en/), opcionalmente apuntando a una sección: es_home_url( 'enfoque' ). */
+function es_home_url( $section = '' ) {
     $url = function_exists( 'pll_home_url' ) ? pll_home_url( es_lang() ) : home_url( '/' );
-    return $url . $anchor;
+    return $section !== '' ? $url . '#' . es_anchor( $section ) : $url;
 }
 
 /**

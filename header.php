@@ -20,8 +20,8 @@
         </a>
 
         <nav class="hidden items-center gap-7 md:flex">
-            <a href="<?php echo esc_url( es_home_url( '#enfoque' ) ); ?>" class="font-mono-plex text-xs uppercase tracking-[0.16em] text-muted-foreground transition-colors hover:text-[hsl(var(--accent))]"><?php es_ui_t( 'nav.enfoque' ); ?></a>
-            <a href="<?php echo esc_url( es_home_url( '#trabajo' ) ); ?>" class="font-mono-plex text-xs uppercase tracking-[0.16em] text-muted-foreground transition-colors hover:text-[hsl(var(--accent))]"><?php es_ui_t( 'nav.trabajo' ); ?></a>
+            <a href="<?php echo esc_url( es_home_url( 'enfoque' ) ); ?>" class="font-mono-plex text-xs uppercase tracking-[0.16em] text-muted-foreground transition-colors hover:text-[hsl(var(--accent))]"><?php es_ui_t( 'nav.enfoque' ); ?></a>
+            <a href="<?php echo esc_url( es_home_url( 'trabajo' ) ); ?>" class="font-mono-plex text-xs uppercase tracking-[0.16em] text-muted-foreground transition-colors hover:text-[hsl(var(--accent))]"><?php es_ui_t( 'nav.trabajo' ); ?></a>
             <a href="<?php echo esc_url( es_page_url( 'blog' ) ); ?>" class="font-mono-plex text-xs uppercase tracking-[0.16em] text-muted-foreground transition-colors hover:text-[hsl(var(--accent))]"><?php es_ui_t( 'nav.blog' ); ?></a>
             <a href="<?php echo esc_url( es_page_url( 'cv' ) ); ?>" class="font-mono-plex text-xs uppercase tracking-[0.16em] text-muted-foreground transition-colors hover:text-[hsl(var(--accent))]"><?php es_ui_t( 'nav.cv' ); ?></a>
             <a href="<?php echo esc_url( $perfil['github'] ); ?>" target="_blank" rel="noreferrer" aria-label="GitHub" class="text-muted-foreground transition-colors hover:text-[hsl(var(--accent))]">
@@ -43,8 +43,8 @@
     </div>
 
     <div id="es-mobile-menu" class="hidden border-t border-border bg-background px-5 pb-6 pt-2 md:hidden">
-        <a href="<?php echo esc_url( es_home_url( '#enfoque' ) ); ?>" class="block border-b border-border/60 py-4 font-display text-lg"><?php es_ui_t( 'nav.enfoque' ); ?></a>
-        <a href="<?php echo esc_url( es_home_url( '#trabajo' ) ); ?>" class="block border-b border-border/60 py-4 font-display text-lg"><?php es_ui_t( 'nav.trabajo' ); ?></a>
+        <a href="<?php echo esc_url( es_home_url( 'enfoque' ) ); ?>" class="block border-b border-border/60 py-4 font-display text-lg"><?php es_ui_t( 'nav.enfoque' ); ?></a>
+        <a href="<?php echo esc_url( es_home_url( 'trabajo' ) ); ?>" class="block border-b border-border/60 py-4 font-display text-lg"><?php es_ui_t( 'nav.trabajo' ); ?></a>
         <a href="<?php echo esc_url( es_page_url( 'blog' ) ); ?>" class="block border-b border-border/60 py-4 font-display text-lg"><?php es_ui_t( 'nav.blog' ); ?></a>
         <a href="<?php echo esc_url( es_page_url( 'cv' ) ); ?>" class="block border-b border-border/60 py-4 font-display text-lg"><?php es_ui_t( 'nav.cv' ); ?></a>
         <div class="mt-5 flex gap-6">
