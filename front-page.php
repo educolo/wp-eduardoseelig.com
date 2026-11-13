@@ -206,7 +206,9 @@ get_header();
         </div>
     </section>
 
-    <!-- BLOG preview -->
+    <!-- BLOG preview (sólo si hay notas en el idioma actual) -->
+    <?php $es_home_posts = new WP_Query( [ 'post_type' => 'post', 'posts_per_page' => 2, 'ignore_sticky_posts' => true ] ); ?>
+    <?php if ( $es_home_posts->have_posts() ) : ?>
     <section class="border-b border-border bg-secondary/40">
         <div class="mx-auto max-w-[80rem] px-5 py-20 md:px-10">
             <div class="es-reveal flex flex-wrap items-end justify-between gap-6">
@@ -219,8 +221,6 @@ get_header();
                 </a>
             </div>
 
-            <?php $es_home_posts = new WP_Query( [ 'post_type' => 'post', 'posts_per_page' => 2, 'ignore_sticky_posts' => true ] ); ?>
-            <?php if ( $es_home_posts->have_posts() ) : ?>
                 <div class="es-reveal mt-12 grid gap-px border border-border bg-border md:grid-cols-2">
                     <?php while ( $es_home_posts->have_posts() ) : $es_home_posts->the_post(); ?>
                         <article class="flex h-full flex-col bg-background p-8">
@@ -233,9 +233,9 @@ get_header();
                         </article>
                     <?php endwhile; wp_reset_postdata(); ?>
                 </div>
-            <?php endif; ?>
         </div>
     </section>
+    <?php endif; ?>
 
     <!-- CONTACTO -->
     <section id="<?php echo esc_attr( es_anchor( 'contacto' ) ); ?>" class="scroll-mt-24">

@@ -100,22 +100,31 @@ function es_home_url( $section = '' ) {
 
 /**
  * URL de una página del tema (por su slug en español: "blog", "cv") en el
- * idioma actual. Si la página no tiene traducción, devuelve la española.
+ * idioma actual. Si la página no tiene traducción, devuelve la española; si
+ * la página no existe, la home del idioma actual. Se calcula una vez por
+ * request (el header, el footer y las plantillas la piden varias veces).
  */
 function es_page_url( $slug ) {
+    static $cache = [];
+    $lang = es_lang();
+    if ( isset( $cache[ $lang ][ $slug ] ) ) {
+        return $cache[ $lang ][ $slug ];
+    }
     $page = get_page_by_path( $slug );
     if ( ! $page ) {
-        return home_url( '/' . $slug . '/' );
+        $url = es_home_url();
+    } else {
+        $id = $page->ID;
+        if ( function_exists( 'pll_get_post' ) ) {
+            $id = pll_get_post( $id, $lang ) ?: $id;
+        }
+        $url = get_permalink( $id );
     }
-    $id = $page->ID;
-    if ( function_exists( 'pll_get_post' ) ) {
-        $id = pll_get_post( $id, es_lang() ) ?: $id;
-    }
-    return get_permalink( $id );
+    return $cache[ $lang ][ $slug ] = $url;
 }
 
 /**
- * Links del selector de idioma: [ ['slug' => 'es', 'url' => ..., 'current' => bool], ... ].
+ * Links del selector de idioma: [ ['slug' => 'es', 'name' => 'Español', 'url' => ..., 'current' => bool], ... ].
  * Cada link apunta a la traducción de la página actual; si no existe,
  * Polylang devuelve la home de ese idioma.
  */
@@ -124,9 +133,9 @@ function es_lang_links() {
         $raw = pll_the_languages( [ 'raw' => 1, 'hide_if_empty' => 0 ] );
         if ( is_array( $raw ) && $raw ) {
             return array_map( function ( $l ) {
-                return [ 'slug' => $l['slug'], 'url' => $l['url'], 'current' => ! empty( $l['current_lang'] ) ];
+                return [ 'slug' => $l['slug'], 'name' => $l['name'], 'url' => $l['url'], 'current' => ! empty( $l['current_lang'] ) ];
             }, array_values( $raw ) );
         }
     }
-    return [ [ 'slug' => 'es', 'url' => home_url( '/' ), 'current' => true ] ];
+    return [ [ 'slug' => 'es', 'name' => 'Español', 'url' => home_url( '/' ), 'current' => true ] ];
 }

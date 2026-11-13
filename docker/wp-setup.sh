@@ -89,20 +89,41 @@ wp plugin is-installed polylang --allow-root || wp plugin install polylang --all
 wp plugin activate polylang --allow-root >/dev/null
 
 echo "==> Configurando Polylang..."
+# Cualquier fallo corta el script (WP_CLI::error sale con codigo != 0 y set -e
+# lo propaga), en vez de seguir con datos invalidos y decir "Listo".
 wp eval --allow-root '
+$check = function ( $result, $what ) {
+    if ( is_wp_error( $result ) && $result->has_errors() ) {
+        WP_CLI::error( "$what: " . $result->get_error_message() );
+    }
+    if ( ! $result ) {
+        WP_CLI::error( "$what: fallo sin detalle" );
+    }
+    return $result;
+};
+if ( ! function_exists( "PLL" ) || ! function_exists( "pll_set_post_language" ) ) {
+    WP_CLI::error( "Polylang no esta cargado" );
+}
 $m = PLL()->model;
 if ( ! $m->languages->get( "es" ) ) {
-    $m->languages->add( [ "locale" => "es_AR", "slug" => "es", "name" => "Español", "flag" => "ar", "term_group" => 0 ] );
+    $check( $m->languages->add( [ "locale" => "es_AR", "slug" => "es", "name" => "Español", "flag" => "ar", "term_group" => 0 ] ), "Agregar idioma es" );
 }
 if ( ! $m->languages->get( "en" ) ) {
-    $m->languages->add( [ "locale" => "en_US", "slug" => "en", "name" => "English", "flag" => "us", "term_group" => 1 ] );
+    $check( $m->languages->add( [ "locale" => "en_US", "slug" => "en", "name" => "English", "flag" => "us", "term_group" => 1 ] ), "Agregar idioma en" );
 }
 $o = PLL()->options;
-$o->set( "default_lang", "es" );
-$o->set( "force_lang", 1 );        // idioma desde el directorio (/en/)
-$o->set( "hide_default", true );   // sin /es/ para el idioma por defecto
-$o->set( "rewrite", true );        // /en/ y no /language/en/
-$o->set( "browser", true );        // detectar idioma del navegador en la home
+foreach ( [
+    "default_lang" => "es",
+    "force_lang"   => 1,     // idioma desde el directorio (/en/)
+    "hide_default" => true,  // sin /es/ para el idioma por defecto
+    "rewrite"      => true,  // /en/ y no /language/en/
+    "browser"      => true,  // detectar idioma del navegador en la home
+] as $key => $value ) {
+    $errors = $o->set( $key, $value );
+    if ( $errors->has_errors() ) {
+        WP_CLI::error( "Opcion $key: " . $errors->get_error_message() );
+    }
+}
 $o->save();
 
 // Todo el contenido sin idioma pasa a ES (incluye el post de ejemplo y las paginas).
@@ -120,12 +141,24 @@ foreach ( $pages as $es_slug => list( $en_slug, $en_title, $tpl ) ) {
     if ( ! $es || pll_get_post( $es->ID, "en" ) ) {
         continue;
     }
-    $en_id = wp_insert_post( [ "post_type" => "page", "post_status" => "publish", "post_title" => $en_title, "post_name" => $en_slug ] );
+    $en_id = $check( wp_insert_post( [ "post_type" => "page", "post_status" => "publish", "post_title" => $en_title, "post_name" => $en_slug ], true ), "Crear pagina $en_slug" );
     update_post_meta( $en_id, "_wp_page_template", $tpl );
     pll_set_post_language( $en_id, "en" );
     pll_save_post_translations( [ "es" => $es->ID, "en" => $en_id ] );
     echo "Pagina EN creada: /en/$en_slug/\n";
 }
+
+// Verificacion final: los dos idiomas existen y las paginas tienen su traduccion EN.
+if ( [ "es", "en" ] !== pll_languages_list() ) {
+    WP_CLI::error( "Idiomas inesperados: " . implode( ",", pll_languages_list() ) );
+}
+foreach ( array_keys( $pages ) as $es_slug ) {
+    $es = get_page_by_path( $es_slug );
+    if ( $es && ! pll_get_post( $es->ID, "en" ) ) {
+        WP_CLI::error( "La pagina $es_slug no tiene traduccion EN" );
+    }
+}
+WP_CLI::success( "Polylang configurado" );
 '
 wp rewrite flush --hard --allow-root >/dev/null 2>&1 || true
 

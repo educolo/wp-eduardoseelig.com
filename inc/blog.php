@@ -19,10 +19,27 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 define( 'ES_META_TITLE_EN',   'es_title_en' );
 define( 'ES_META_CONTENT_EN', 'es_content_en' );
 
+/**
+ * ¿El post tiene datos EN del sistema anterior? Sólo cuenta en posts que no
+ * están en inglés (por si los datos llegaron a una traducción EN).
+ */
 function es_blog_legacy_has_en( $post_id ) {
+    if ( function_exists( 'pll_get_post_language' ) && 'en' === pll_get_post_language( $post_id ) ) {
+        return false;
+    }
     return get_post_meta( $post_id, ES_META_TITLE_EN, true ) !== ''
         || get_post_meta( $post_id, ES_META_CONTENT_EN, true ) !== '';
 }
+
+/**
+ * Al crear una traducción con el "+" de Polylang se copian los campos
+ * personalizados del original: excluimos los del sistema anterior para que
+ * no se dupliquen en la traducción.
+ */
+function es_blog_no_copy_legacy_meta( $keys ) {
+    return array_values( array_diff( $keys, [ ES_META_TITLE_EN, ES_META_CONTENT_EN ] ) );
+}
+add_filter( 'pll_copy_post_metas', 'es_blog_no_copy_legacy_meta' );
 
 function es_blog_add_legacy_metabox( $post_type, $post ) {
     if ( 'post' !== $post_type || ! $post || ! es_blog_legacy_has_en( $post->ID ) ) {

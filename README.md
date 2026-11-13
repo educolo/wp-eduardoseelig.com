@@ -20,6 +20,12 @@ Tailwind, recompilá el CSS (ver "Editar estilos").
 
 Para personalizar puertos/credenciales: `cp .env.example .env` y editá.
 
+> **Si ya tenías el entorno levantado de antes:** los archivos de WordPress
+> viven en el volumen `wp_core` y no se actualizan al cambiar la imagen en
+> `docker-compose.yml` (por ejemplo, de 6.5 a 7.1). Para tomar la versión
+> nueva, recreá todo una vez: `docker compose down -v` y volvé a correr los
+> dos comandos de arriba (borra la base local).
+
 Comandos útiles:
 ```bash
 docker compose logs -f wordpress    # ver logs
