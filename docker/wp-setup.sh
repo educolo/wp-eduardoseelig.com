@@ -84,7 +84,7 @@ wp option update show_on_front posts --allow-root >/dev/null 2>&1 || true
 # En produccion esto se configura a mano desde el admin (ver README).
 # ---------------------------------------------------------------------------
 echo "==> Instalando idioma es_AR y Polylang..."
-wp language core install es_AR --allow-root >/dev/null 2>&1 || true
+wp language core install es_AR --activate --allow-root >/dev/null 2>&1 || true
 wp plugin is-installed polylang --allow-root || wp plugin install polylang --allow-root
 wp plugin activate polylang --allow-root >/dev/null
 
