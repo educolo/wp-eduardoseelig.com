@@ -135,7 +135,7 @@ foreach ( get_posts( [ "post_type" => [ "post", "page" ], "post_status" => "any"
 
 // Traducciones EN de las paginas del tema (mismo template, slug propio:
 // Polylang gratis no permite el mismo slug en dos idiomas).
-$pages = [ "cv" => [ "resume", "Resume", "page-cv.php" ], "blog" => [ "notes", "Notes", "page-blog.php" ] ];
+$pages = [ "cv" => [ "resume", "Resume", "page-cv.php" ], "blog" => [ "posts", "Posts", "page-blog.php" ] ];
 foreach ( $pages as $es_slug => list( $en_slug, $en_title, $tpl ) ) {
     $es = get_page_by_path( $es_slug );
     if ( ! $es || pll_get_post( $es->ID, "en" ) ) {

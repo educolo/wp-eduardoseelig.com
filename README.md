@@ -52,7 +52,7 @@ El sitio es bilingüe con el plugin gratuito [Polylang](https://wordpress.org/pl
   en la caja *Idiomas* del editor tocá el “+” junto al otro idioma. Una nota
   puede existir en un solo idioma; el listado de cada idioma muestra solo las suyas.
 - **Páginas `cv` y `blog`**: tienen su traducción en inglés (`/en/resume/` y
-  `/en/notes/` en local), con la misma plantilla.
+  `/en/posts/` en local), con la misma plantilla.
 - **Textos fijos del tema** (home, CV, botones): siguen en `inc/site-content.php`
   e `inc/ui-strings.php` como `['es' => ..., 'en' => ...]`.
 
@@ -69,7 +69,7 @@ Con Docker, `docker compose run --rm wpcli` instala y configura todo esto solo.
    `/language/`. En “Detect browser language”: **activado**.
 5. Páginas: en `CV` y `Blog`, crear la traducción en inglés desde la columna
    del idioma (+), con la misma plantilla (CV / Blog) y slug propio
-   (ej. `resume`, `notes`).
+   (ej. `resume`, `posts`).
 6. Posts con versión EN del sistema anterior: muestran la caja “Versión en
    inglés anterior”. Crear la traducción EN, copiar título y contenido, y
    marcar “borrar estos datos” al guardar.
