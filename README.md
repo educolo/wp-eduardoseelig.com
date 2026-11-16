@@ -51,6 +51,9 @@ El sitio es bilingüe con el plugin gratuito [Polylang](https://wordpress.org/pl
 - **Notas del blog**: cada idioma es un post propio. Para traducir una nota,
   en la caja *Idiomas* del editor tocá el “+” junto al otro idioma. Una nota
   puede existir en un solo idioma; el listado de cada idioma muestra solo las suyas.
+  Si desde una nota sin traducción se cambia de idioma, el selector lleva al
+  blog del otro idioma con un aviso (`?untranslated=1`, textos en `notices`
+  de `inc/ui-strings.php`).
 - **Páginas `cv` y `blog`**: tienen su traducción en inglés (`/en/resume/` y
   `/en/posts/` en local), con la misma plantilla.
 - **Textos fijos del tema** (home, CV, botones): siguen en `inc/site-content.php`

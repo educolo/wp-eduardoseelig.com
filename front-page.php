@@ -13,6 +13,8 @@ get_header();
 
 <div class="min-h-screen bg-background">
 
+    <?php get_template_part( 'template-parts/untranslated-notice', null, [ 'message' => 'notices.untranslatedPage' ] ); ?>
+
     <!-- HERO -->
     <section class="relative overflow-hidden border-b border-border">
         <div class="pointer-events-none absolute inset-0 grid-lines opacity-60"></div>

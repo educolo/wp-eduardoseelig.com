@@ -43,6 +43,11 @@ function es_ui() {
             'misc' => [ 'verMas' => 'Ver más', 'verTodos' => 'Ver todos' ],
             // Anclas (id) de las secciones de la home.
             'anchors' => [ 'focus' => 'enfoque', 'work' => 'trabajo', 'contact' => 'contacto' ],
+            // Aviso al cambiar de idioma desde una página sin traducción.
+            'notices' => [
+                'untranslatedPost' => 'Esta nota todavía no está disponible en español. Estas son las últimas publicadas.',
+                'untranslatedPage' => 'Esta página todavía no está disponible en español.',
+            ],
         ],
         'en' => [
             'nav' => [
@@ -78,6 +83,10 @@ function es_ui() {
             'footer' => [ 'contacto' => 'Contact', 'redes' => 'Social', 'secciones' => 'Sections' ],
             'misc' => [ 'verMas' => 'See more', 'verTodos' => 'See all' ],
             'anchors' => [ 'focus' => 'focus', 'work' => 'work', 'contact' => 'contact' ],
+            'notices' => [
+                'untranslatedPost' => "This note isn't available in English yet. Here are the latest posts.",
+                'untranslatedPage' => "This page isn't available in English yet.",
+            ],
         ],
     ];
 }

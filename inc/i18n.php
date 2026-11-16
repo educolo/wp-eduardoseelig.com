@@ -88,31 +88,35 @@ function es_ui_get( $path, $lang = null ) {
  * ------------------------------------------------------------------------- */
 
 /** Ancla (id) de una sección de la home en el idioma actual: es_anchor( 'focus' ) => "enfoque" en español. */
-function es_anchor( $section ) {
-    return es_ui_get( 'anchors.' . $section ) ?: $section;
-}
-
-/** Home del idioma actual (/ o /en/), opcionalmente apuntando a una sección: es_home_url( 'focus' ). */
-function es_home_url( $section = '' ) {
-    $url = function_exists( 'pll_home_url' ) ? pll_home_url( es_lang() ) : home_url( '/' );
-    return $section !== '' ? $url . '#' . es_anchor( $section ) : $url;
+function es_anchor( $section, $lang = null ) {
+    return es_ui_get( 'anchors.' . $section, $lang ) ?: $section;
 }
 
 /**
- * URL de una página del tema (por su slug en español: "blog", "cv") en el
- * idioma actual. Si la página no tiene traducción, devuelve la española; si
- * la página no existe, la home del idioma actual. Se calcula una vez por
- * request (el header, el footer y las plantillas la piden varias veces).
+ * Home de un idioma (por defecto, el actual), opcionalmente apuntando a una
+ * sección: es_home_url( 'focus' ) => "/#enfoque" en español, "/en/#focus" en inglés.
  */
-function es_page_url( $slug ) {
+function es_home_url( $section = '', $lang = null ) {
+    $lang = $lang ?: es_lang();
+    $url  = function_exists( 'pll_home_url' ) ? pll_home_url( $lang ) : home_url( '/' );
+    return $section !== '' ? $url . '#' . es_anchor( $section, $lang ) : $url;
+}
+
+/**
+ * URL de una página del tema (por su slug en español: "blog", "cv") en un
+ * idioma (por defecto, el actual). Si la página no tiene traducción, devuelve
+ * la española; si la página no existe, la home de ese idioma. Se calcula una
+ * vez por request (el header, el footer y las plantillas la piden varias veces).
+ */
+function es_page_url( $slug, $lang = null ) {
     static $cache = [];
-    $lang = es_lang();
+    $lang = $lang ?: es_lang();
     if ( isset( $cache[ $lang ][ $slug ] ) ) {
         return $cache[ $lang ][ $slug ];
     }
     $page = get_page_by_path( $slug );
     if ( ! $page ) {
-        $url = es_home_url();
+        $url = es_home_url( '', $lang );
     } else {
         $id = $page->ID;
         if ( function_exists( 'pll_get_post' ) ) {
@@ -123,19 +127,33 @@ function es_page_url( $slug ) {
     return $cache[ $lang ][ $slug ] = $url;
 }
 
+/** Parámetro que indica que el visitante llegó desde una página sin traducción. */
+define( 'ES_UNTRANSLATED_PARAM', 'untranslated' );
+
 /**
  * Links del selector de idioma: [ ['slug' => 'es', 'name' => 'Español', 'url' => ..., 'current' => bool], ... ].
- * Cada link apunta a la traducción de la página actual; si no existe,
- * Polylang devuelve la home de ese idioma.
+ * Cada link apunta a la traducción de la página actual. Si no existe, en una
+ * nota lleva al blog del otro idioma y en cualquier otra página a su home,
+ * con ?untranslated=1 para mostrar un aviso (ver template-parts/untranslated-notice.php).
  */
 function es_lang_links() {
     if ( function_exists( 'pll_the_languages' ) ) {
         $raw = pll_the_languages( [ 'raw' => 1, 'hide_if_empty' => 0 ] );
         if ( is_array( $raw ) && $raw ) {
             return array_map( function ( $l ) {
-                return [ 'slug' => $l['slug'], 'name' => $l['name'], 'url' => $l['url'], 'current' => ! empty( $l['current_lang'] ) ];
+                $url = $l['url'];
+                if ( ! empty( $l['no_translation'] ) && empty( $l['current_lang'] ) ) {
+                    $target = is_singular( 'post' ) ? es_page_url( 'blog', $l['slug'] ) : es_home_url( '', $l['slug'] );
+                    $url    = add_query_arg( ES_UNTRANSLATED_PARAM, '1', $target );
+                }
+                return [ 'slug' => $l['slug'], 'name' => $l['name'], 'url' => $url, 'current' => ! empty( $l['current_lang'] ) ];
             }, array_values( $raw ) );
         }
     }
     return [ [ 'slug' => 'es', 'name' => 'Español', 'url' => home_url( '/' ), 'current' => true ] ];
+}
+
+/** ¿El visitante llegó desde una página que no tiene traducción a este idioma? */
+function es_is_untranslated_redirect() {
+    return ! empty( $_GET[ ES_UNTRANSLATED_PARAM ] ); // phpcs:ignore WordPress.Security.NonceVerification
 }

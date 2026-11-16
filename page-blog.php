@@ -21,6 +21,8 @@ $es_blog_q = new WP_Query( [
 
 <div class="min-h-screen bg-background">
 
+    <?php get_template_part( 'template-parts/untranslated-notice', null, [ 'message' => 'notices.untranslatedPost' ] ); ?>
+
     <section class="border-b border-border">
         <div class="mx-auto max-w-[80rem] px-5 py-16 md:px-10 md:py-20">
             <p class="font-mono-plex text-xs uppercase tracking-[0.24em] text-[hsl(var(--accent))]"><?php es_ui_t( 'blogPage.tag' ); ?></p>
