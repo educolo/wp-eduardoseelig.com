@@ -62,6 +62,16 @@ El sitio es bilingüe con el plugin gratuito [Polylang](https://wordpress.org/pl
 Con Docker, `docker compose run --rm wpcli` instala y configura todo esto solo.
 
 ### Configuración en producción (una sola vez)
+**Por SSH (recomendado):** `scripts/prod-setup-polylang.sh` hace todo lo de
+abajo con WP-CLI (backup de la base, Polylang, idiomas, páginas EN y
+vinculación de notas existentes) y es idempotente. Correrlo recién cuando
+el tema >= 1.1.0 esté desplegado:
+
+```bash
+ssh -p <puerto> <usuario>@<host> 'bash -s' < scripts/prod-setup-polylang.sh
+```
+
+**Desde el admin**, a mano:
 1. Plugins > Añadir nuevo > instalar y activar **Polylang**. Saltear el asistente.
 2. Idiomas > Idiomas: agregar **Español** (`es`, es_AR), primero y por defecto,
    y **English** (`en`, en_US).
