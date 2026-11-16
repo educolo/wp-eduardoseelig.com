@@ -39,6 +39,7 @@
     </div>
 </footer>
 
+<?php get_template_part( 'template-parts/lang-confirm' ); ?>
 <?php wp_footer(); ?>
 </body>
 </html>

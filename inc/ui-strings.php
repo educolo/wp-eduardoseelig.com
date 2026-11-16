@@ -48,6 +48,13 @@ function es_ui() {
                 'untranslatedPost' => 'Esta nota todavía no está disponible en español. Estas son las últimas publicadas.',
                 'untranslatedPage' => 'Esta página todavía no está disponible en español.',
             ],
+            // Confirmación (toast) al tocar un idioma sin traducción. Se muestra
+            // en el idioma de destino: estos textos son para quien va al español.
+            'confirm' => [
+                'untranslatedPost' => 'Esta nota no está disponible en español. ¿Ir al blog en español?',
+                'untranslatedPage' => 'Esta página no está disponible en español. ¿Ir al inicio en español?',
+                'goToBlog' => 'Ir al blog', 'goToHome' => 'Ir al inicio', 'cancel' => 'Cancelar',
+            ],
         ],
         'en' => [
             'nav' => [
@@ -86,6 +93,11 @@ function es_ui() {
             'notices' => [
                 'untranslatedPost' => "This note isn't available in English yet. Here are the latest posts.",
                 'untranslatedPage' => "This page isn't available in English yet.",
+            ],
+            'confirm' => [
+                'untranslatedPost' => "This note isn't available in English. Go to the English blog?",
+                'untranslatedPage' => "This page isn't available in English. Go to the English home page?",
+                'goToBlog' => 'Go to blog', 'goToHome' => 'Go to home', 'cancel' => 'Cancel',
             ],
         ],
     ];

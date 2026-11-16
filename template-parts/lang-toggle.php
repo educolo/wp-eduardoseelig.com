@@ -6,6 +6,12 @@
            lang="<?php echo esc_attr( $l['slug'] ); ?>"
            aria-label="<?php echo esc_attr( $l['name'] ); ?>"
            <?php if ( $l['current'] ) : ?>aria-current="page"<?php endif; ?>
+           <?php if ( $l['untranslated'] ) :
+               $is_post = 'post' === $l['untranslated']; ?>
+           data-es-confirm="<?php echo esc_attr( es_ui_get( $is_post ? 'confirm.untranslatedPost' : 'confirm.untranslatedPage', $l['slug'] ) ); ?>"
+           data-es-confirm-ok="<?php echo esc_attr( es_ui_get( $is_post ? 'confirm.goToBlog' : 'confirm.goToHome', $l['slug'] ) ); ?>"
+           data-es-confirm-cancel="<?php echo esc_attr( es_ui_get( 'confirm.cancel', $l['slug'] ) ); ?>"
+           <?php endif; ?>
            class="px-2.5 py-2 font-mono-plex text-[11px] uppercase tracking-[0.14em] transition-colors <?php echo $l['current'] ? 'bg-[hsl(var(--ink))] text-primary-foreground' : 'text-muted-foreground hover:text-[hsl(var(--accent))]'; ?>"><?php echo esc_html( $l['slug'] ); ?></a>
     <?php endforeach; ?>
 </div>

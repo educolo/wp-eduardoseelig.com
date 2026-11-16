@@ -131,7 +131,11 @@ function es_page_url( $slug, $lang = null ) {
 define( 'ES_UNTRANSLATED_PARAM', 'untranslated' );
 
 /**
- * Links del selector de idioma: [ ['slug' => 'es', 'name' => 'Español', 'url' => ..., 'current' => bool], ... ].
+ * Links del selector de idioma:
+ *   [ ['slug' => 'es', 'name' => 'Español', 'url' => ..., 'current' => bool,
+ *      'untranslated' => null | 'post' | 'page'], ... ]
+ * 'untranslated' indica que la página actual no existe en ese idioma (y si
+ * es una nota o otra página), para que el JS pida confirmación.
  * Cada link apunta a la traducción de la página actual. Si no existe, en una
  * nota lleva al blog del otro idioma y en cualquier otra página a su home,
  * con ?untranslated=1 para mostrar un aviso (ver template-parts/untranslated-notice.php).
@@ -141,16 +145,18 @@ function es_lang_links() {
         $raw = pll_the_languages( [ 'raw' => 1, 'hide_if_empty' => 0 ] );
         if ( is_array( $raw ) && $raw ) {
             return array_map( function ( $l ) {
-                $url = $l['url'];
+                $url          = $l['url'];
+                $untranslated = null;
                 if ( ! empty( $l['no_translation'] ) && empty( $l['current_lang'] ) ) {
-                    $target = is_singular( 'post' ) ? es_page_url( 'blog', $l['slug'] ) : es_home_url( '', $l['slug'] );
-                    $url    = add_query_arg( ES_UNTRANSLATED_PARAM, '1', $target );
+                    $untranslated = is_singular( 'post' ) ? 'post' : 'page';
+                    $target       = 'post' === $untranslated ? es_page_url( 'blog', $l['slug'] ) : es_home_url( '', $l['slug'] );
+                    $url          = add_query_arg( ES_UNTRANSLATED_PARAM, '1', $target );
                 }
-                return [ 'slug' => $l['slug'], 'name' => $l['name'], 'url' => $url, 'current' => ! empty( $l['current_lang'] ) ];
+                return [ 'slug' => $l['slug'], 'name' => $l['name'], 'url' => $url, 'current' => ! empty( $l['current_lang'] ), 'untranslated' => $untranslated ];
             }, array_values( $raw ) );
         }
     }
-    return [ [ 'slug' => 'es', 'name' => 'Español', 'url' => home_url( '/' ), 'current' => true ] ];
+    return [ [ 'slug' => 'es', 'name' => 'Español', 'url' => home_url( '/' ), 'current' => true, 'untranslated' => null ] ];
 }
 
 /** ¿El visitante llegó desde una página que no tiene traducción a este idioma? */
