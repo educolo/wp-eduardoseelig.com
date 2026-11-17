@@ -2,6 +2,9 @@
 
 Tema a medida WordPress clásico (PHP + Tailwind compilado), para el sitio www.eduardoseelig.com
 
+El tema en sí está en `theme/`; el resto del repo (Docker, scripts, build de
+Tailwind, docs) es para desarrollo y no llega al hosting (ver "Deploy").
+
 ## Probar local con Docker (recomendado)
 Levanta MySQL + WordPress con el tema ya instalado, activado y las páginas
 `cv` y `cursos` creadas automáticamente.
@@ -14,7 +17,7 @@ docker compose run --rm wpcli       # instala WP, activa el tema y crea las pág
 - Sitio: http://localhost:8080
 - Admin: http://localhost:8080/wp-admin — usuario `admin`, contraseña `admin`
 
-Este repo se monta dentro del contenedor como `wp-content/themes/eduardo-seelig`,
+La carpeta `theme/` se monta dentro del contenedor como `wp-content/themes/eduardo-seelig`,
 así que cualquier cambio en los `.php` se ve al recargar. Si tocás clases de
 Tailwind, recompilá el CSS (ver "Editar estilos").
 
@@ -35,7 +38,7 @@ docker compose down -v              # apagar y borrar la base (empezar de cero)
 
 ## Instalación (sin Docker)
 1. Instalá WordPress (local con LocalWP, o en tu hosting).
-2. Copiá esta carpeta completa a `wp-content/themes/eduardo-seelig`.
+2. Copiá el contenido de `theme/` a `wp-content/themes/eduardo-seelig`.
 3. Activá el tema desde Apariencia > Temas.
 4. Creá 2 páginas en WordPress:
    - Una con slug **cv** → asignale la plantilla "CV" (Atributos de página).
@@ -53,11 +56,11 @@ El sitio es bilingüe con el plugin gratuito [Polylang](https://wordpress.org/pl
   puede existir en un solo idioma; el listado de cada idioma muestra solo las suyas.
   Si desde una nota sin traducción se cambia de idioma, el selector lleva al
   blog del otro idioma con un aviso (`?untranslated=1`, textos en `notices`
-  de `inc/ui-strings.php`).
+  de `theme/inc/ui-strings.php`).
 - **Páginas `cv` y `blog`**: tienen su traducción en inglés (`/en/resume/` y
   `/en/posts/` en local), con la misma plantilla.
-- **Textos fijos del tema** (home, CV, botones): siguen en `inc/site-content.php`
-  e `inc/ui-strings.php` como `['es' => ..., 'en' => ...]`.
+- **Textos fijos del tema** (home, CV, botones): siguen en `theme/inc/site-content.php`
+  e `theme/inc/ui-strings.php` como `['es' => ..., 'en' => ...]`.
 
 Con Docker, `docker compose run --rm wpcli` instala y configura todo esto solo.
 
@@ -88,29 +91,53 @@ ssh -p <puerto> <usuario>@<host> 'bash -s' < scripts/prod-setup-polylang.sh
    marcar “borrar estos datos” al guardar.
 7. Ajustes > Enlaces permanentes > Guardar (refresca las URLs).
 
+## Deploy
+Al mergear a `main`, el workflow `.github/workflows/deploy.yml` compila el CSS
+y publica **solo el contenido de `theme/`** en la rama `deploy`, con un commit
+por merge que referencia el commit de origen. Hostinger despliega desde la rama
+`deploy` (hPanel > Avanzado > Git) a `wp-content/themes/eduardo-seelig`.
+
+- Para volver a una versión anterior: revertir el commit en `deploy`, o correr
+  el workflow a mano (Actions > Deploy > Run workflow) sobre un commit de `main`.
+- `theme/.htaccess` bloquea igual dotfiles y archivos de tooling (Hostinger
+  deja `.git/` en la carpeta del tema).
+
 ## Editar contenido
 Todo el contenido (perfil, proyectos, experiencia, cursos, habilidades) vive en:
-- `inc/site-content.php` — datos (equivalente a data/site.js del sitio original)
-- `inc/ui-strings.php` — textos de botones, navegación, títulos de sección
+- `theme/inc/site-content.php` — datos (equivalente a data/site.js del sitio original)
+- `theme/inc/ui-strings.php` — textos de botones, navegación, títulos de sección
 
 No hace falta tocar los archivos .php de las páginas para cambiar texto.
 
 ## Editar estilos
-Los estilos son Tailwind CSS compilado a `assets/css/app.css`. Si cambiás
-clases de Tailwind en los .php, hay que recompilar:
+Los estilos son Tailwind CSS: `src/tailwind-input.css` se compila a
+`theme/assets/css/app.css`. Si cambiás clases de Tailwind en los .php, hay que
+recompilar para verlo en local (el deploy lo recompila igual, así que en
+producción nunca queda un CSS desactualizado):
 
 ```bash
 npm install
 npm run build       # compila una vez
 npm run watch        # recompila automáticamente mientras editás
+# sin Node instalado:
+docker run --rm -u "$(id -u):$(id -g)" -v "$PWD":/app -w /app node:20-alpine sh -c 'npm ci && npm run build'
 ```
 
 ## Estructura
-- `front-page.php` — Home
-- `page-cv.php` — plantilla de CV
-- `page-cursos.php` — plantilla de Cursos (con filtro por formato)
-- `header.php` / `footer.php` — header y footer compartidos
-- `assets/js/main.js` — menú móvil, animaciones reveal-on-scroll, contador
-  animado (reemplaza React + framer-motion del sitio original, sin dependencias)
-- `inc/i18n.php` — helpers bilingües ES/EN sobre Polylang (idioma actual, URLs)
-- `inc/blog.php` — blog bilingüe (Polylang) + caja de migración del sistema anterior
+```
+theme/                    ← el tema (lo único que se despliega)
+  front-page.php          Home
+  page-cv.php             plantilla de CV
+  page-blog.php, single.php   blog
+  header.php / footer.php header y footer compartidos
+  inc/i18n.php            helpers bilingües ES/EN sobre Polylang (idioma actual, URLs)
+  inc/blog.php            blog bilingüe (Polylang) + caja de migración del sistema anterior
+  inc/site-content.php, inc/ui-strings.php   textos y datos
+  template-parts/         selector de idioma, toast y avisos
+  assets/js/main.js       menú móvil, reveal-on-scroll, contador, toast de idioma
+  assets/css/app.css      CSS compilado
+src/tailwind-input.css    fuente de Tailwind
+docker/, docker-compose.yml   entorno local
+scripts/                  scripts de producción (WP-CLI por SSH)
+.github/workflows/        deploy a la rama `deploy`
+```
