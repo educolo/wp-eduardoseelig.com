@@ -1,13 +1,17 @@
 <?php
 /**
- * Blog bilingüe (MVP, sin plugins).
+ * Blog bilingüe con Polylang.
  *
- * El sitio usa un sistema de idiomas propio: se imprimen ES y EN juntos en el
- * HTML (envueltos en .i18n data-lang) y el JS del tema muestra uno solo.
- * Para los posts extendemos ese mismo modelo: la versión en español es el
- * contenido nativo del post; la versión en inglés se guarda en dos campos
- * meta editables desde un meta box. Si el inglés está vacío, se hace fallback
- * al español (podés publicar en español y traducir después).
+ * Cada nota es un post de WordPress con su idioma (ES o EN), y las versiones
+ * de una misma nota se vinculan como traducciones desde el editor (caja
+ * "Idiomas" de Polylang). Una nota puede existir en un solo idioma.
+ * Polylang filtra automáticamente las consultas por el idioma actual.
+ *
+ * Migración: hasta la v1 la versión en inglés se guardaba en los meta
+ * `es_title_en` / `es_content_en` del post en español. Si un post todavía
+ * tiene esos datos, se muestran en una caja de sólo lectura para copiarlos
+ * a la traducción en inglés. Una vez copiados, se pueden borrar con el
+ * checkbox de esa caja.
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
@@ -15,98 +19,66 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 define( 'ES_META_TITLE_EN',   'es_title_en' );
 define( 'ES_META_CONTENT_EN', 'es_content_en' );
 
-/* ---------------------------------------------------------------------------
- * Meta box: versión en inglés
- * ------------------------------------------------------------------------- */
-function es_blog_add_metabox() {
+/**
+ * ¿El post tiene datos EN del sistema anterior? Sólo cuenta en posts que no
+ * están en inglés (por si los datos llegaron a una traducción EN).
+ */
+function es_blog_legacy_has_en( $post_id ) {
+    if ( function_exists( 'pll_get_post_language' ) && 'en' === pll_get_post_language( $post_id ) ) {
+        return false;
+    }
+    return get_post_meta( $post_id, ES_META_TITLE_EN, true ) !== ''
+        || get_post_meta( $post_id, ES_META_CONTENT_EN, true ) !== '';
+}
+
+/**
+ * Al crear una traducción con el "+" de Polylang se copian los campos
+ * personalizados del original: excluimos los del sistema anterior para que
+ * no se dupliquen en la traducción.
+ */
+function es_blog_no_copy_legacy_meta( $keys ) {
+    return array_values( array_diff( $keys, [ ES_META_TITLE_EN, ES_META_CONTENT_EN ] ) );
+}
+add_filter( 'pll_copy_post_metas', 'es_blog_no_copy_legacy_meta' );
+
+function es_blog_add_legacy_metabox( $post_type, $post ) {
+    if ( 'post' !== $post_type || ! $post || ! es_blog_legacy_has_en( $post->ID ) ) {
+        return;
+    }
     add_meta_box(
-        'es-en-version',
-        __( 'Versión en inglés (EN)', 'eduardo-seelig' ),
-        'es_blog_render_metabox',
+        'es-en-legacy',
+        __( 'Versión en inglés anterior (para migrar)', 'eduardo-seelig' ),
+        'es_blog_render_legacy_metabox',
         'post',
         'normal',
         'high'
     );
 }
-add_action( 'add_meta_boxes', 'es_blog_add_metabox' );
+add_action( 'add_meta_boxes', 'es_blog_add_legacy_metabox', 10, 2 );
 
-function es_blog_render_metabox( $post ) {
-    wp_nonce_field( 'es_blog_save_en', 'es_blog_en_nonce' );
-    $title_en   = get_post_meta( $post->ID, ES_META_TITLE_EN, true );
-    $content_en = get_post_meta( $post->ID, ES_META_CONTENT_EN, true );
+function es_blog_render_legacy_metabox( $post ) {
+    wp_nonce_field( 'es_blog_legacy', 'es_blog_legacy_nonce' );
     ?>
-    <p>
-        <label for="es_title_en" style="display:block;font-weight:600;margin-bottom:4px;">Title (EN)</label>
-        <input type="text" id="es_title_en" name="es_title_en" class="widefat"
-               value="<?php echo esc_attr( $title_en ); ?>"
-               placeholder="English title (opcional)">
-    </p>
-    <p style="margin-top:14px;">
-        <label for="es_content_en" style="display:block;font-weight:600;margin-bottom:4px;">Content (EN)</label>
-        <textarea id="es_content_en" name="es_content_en" rows="14" class="widefat"
-                  placeholder="English content (opcional). Podés usar HTML básico; las líneas en blanco se convierten en párrafos."><?php echo esc_textarea( $content_en ); ?></textarea>
-    </p>
-    <p class="description">
-        Si dejás estos campos vacíos, el sitio muestra la versión en español en ambos idiomas (fallback).
-    </p>
+    <p>Este post tiene la versión en inglés guardada con el sistema anterior, que ya no se muestra en el sitio.
+       Creá la traducción en inglés desde la caja <strong>Idiomas</strong> (botón “+” junto a English), copiá ahí
+       el título y el contenido, y después borrá estos datos.</p>
+    <p><label style="display:block;font-weight:600;margin-bottom:4px;">Title (EN)</label>
+        <input type="text" class="widefat" readonly value="<?php echo esc_attr( get_post_meta( $post->ID, ES_META_TITLE_EN, true ) ); ?>"></p>
+    <p><label style="display:block;font-weight:600;margin-bottom:4px;">Content (EN)</label>
+        <textarea rows="10" class="widefat" readonly><?php echo esc_textarea( get_post_meta( $post->ID, ES_META_CONTENT_EN, true ) ); ?></textarea></p>
+    <p><label><input type="checkbox" name="es_blog_legacy_delete" value="1"> Ya lo copié: borrar estos datos al guardar</label></p>
     <?php
 }
 
-function es_blog_save_metabox( $post_id ) {
-    if ( ! isset( $_POST['es_blog_en_nonce'] ) || ! wp_verify_nonce( $_POST['es_blog_en_nonce'], 'es_blog_save_en' ) ) {
+function es_blog_save_legacy_metabox( $post_id ) {
+    if ( empty( $_POST['es_blog_legacy_delete'] )
+        || ! isset( $_POST['es_blog_legacy_nonce'] )
+        || ! wp_verify_nonce( $_POST['es_blog_legacy_nonce'], 'es_blog_legacy' )
+        || ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
+        || ! current_user_can( 'edit_post', $post_id ) ) {
         return;
     }
-    if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
-        return;
-    }
-    if ( ! current_user_can( 'edit_post', $post_id ) ) {
-        return;
-    }
-    if ( isset( $_POST['es_title_en'] ) ) {
-        update_post_meta( $post_id, ES_META_TITLE_EN, sanitize_text_field( wp_unslash( $_POST['es_title_en'] ) ) );
-    }
-    if ( isset( $_POST['es_content_en'] ) ) {
-        update_post_meta( $post_id, ES_META_CONTENT_EN, wp_kses_post( wp_unslash( $_POST['es_content_en'] ) ) );
-    }
+    delete_post_meta( $post_id, ES_META_TITLE_EN );
+    delete_post_meta( $post_id, ES_META_CONTENT_EN );
 }
-add_action( 'save_post_post', 'es_blog_save_metabox' );
-
-/* ---------------------------------------------------------------------------
- * Helpers de render bilingüe (con fallback al español)
- * ------------------------------------------------------------------------- */
-
-/** Título del post en ambos idiomas. Devuelve ['es' => ..., 'en' => ...]. */
-function es_post_titles( $post = null ) {
-    $post = get_post( $post );
-    $es   = get_the_title( $post );
-    $en   = get_post_meta( $post->ID, ES_META_TITLE_EN, true );
-    return [ 'es' => $es, 'en' => ( $en !== '' ? $en : $es ) ];
-}
-
-/** Contenido HTML del post en ambos idiomas (ya filtrado/seguro para imprimir). */
-function es_post_contents( $post = null ) {
-    $post   = get_post( $post );
-    $es     = apply_filters( 'the_content', $post->post_content );
-    $en_raw = get_post_meta( $post->ID, ES_META_CONTENT_EN, true );
-    $en     = $en_raw !== '' ? wpautop( $en_raw ) : $es;
-    return [ 'es' => $es, 'en' => $en ];
-}
-
-/** Extracto corto del post en ambos idiomas (para las cards del listado/home). */
-function es_post_excerpts( $post = null ) {
-    $post   = get_post( $post );
-    $es     = get_the_excerpt( $post );
-    $en_raw = get_post_meta( $post->ID, ES_META_CONTENT_EN, true );
-    $en     = $en_raw !== '' ? wp_trim_words( wp_strip_all_tags( $en_raw ), 32, '…' ) : $es;
-    return [ 'es' => $es, 'en' => $en ];
-}
-
-/**
- * Imprime un bloque HTML en los dos idiomas, envuelto en .i18n para que el
- * toggle del tema (assets/js/main.js) muestre uno solo. A diferencia de
- * es_t(), NO escapa: usar solo con HTML ya saneado (the_content / wpautop).
- */
-function es_print_bilingual_html( $es_html, $en_html, $wrap = 'div', $class = '' ) {
-    printf( '<%1$s class="i18n %3$s" data-lang="es">%2$s</%1$s>', esc_attr( $wrap ), $es_html, esc_attr( $class ) );
-    printf( '<%1$s class="i18n %3$s" data-lang="en" hidden>%2$s</%1$s>', esc_attr( $wrap ), $en_html, esc_attr( $class ) );
-}
+add_action( 'save_post_post', 'es_blog_save_legacy_metabox' );

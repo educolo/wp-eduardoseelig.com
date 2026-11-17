@@ -20,6 +20,12 @@ Tailwind, recompilá el CSS (ver "Editar estilos").
 
 Para personalizar puertos/credenciales: `cp .env.example .env` y editá.
 
+> **Si ya tenías el entorno levantado de antes:** los archivos de WordPress
+> viven en el volumen `wp_core` y no se actualizan al cambiar la imagen en
+> `docker-compose.yml` (por ejemplo, de 6.5 a 7.1). Para tomar la versión
+> nueva, recreá todo una vez: `docker compose down -v` y volvé a correr los
+> dos comandos de arriba (borra la base local).
+
 Comandos útiles:
 ```bash
 docker compose logs -f wordpress    # ver logs
@@ -36,6 +42,51 @@ docker compose down -v              # apagar y borrar la base (empezar de cero)
    - Una con slug **cursos** → asignale la plantilla "Cursos".
 5. En Ajustes > Lectura, dejá "Tu página de inicio muestra: una página estática"
    NO hace falta: el tema usa `front-page.php` automáticamente para el home.
+
+## Idiomas (Polylang)
+El sitio es bilingüe con el plugin gratuito [Polylang](https://wordpress.org/plugins/polylang/):
+
+- Español en `/` (idioma por defecto, sin prefijo) e inglés en `/en/`.
+- La primera visita a la home redirige al idioma del navegador (cookie `pll_language`).
+- **Notas del blog**: cada idioma es un post propio. Para traducir una nota,
+  en la caja *Idiomas* del editor tocá el “+” junto al otro idioma. Una nota
+  puede existir en un solo idioma; el listado de cada idioma muestra solo las suyas.
+  Si desde una nota sin traducción se cambia de idioma, el selector lleva al
+  blog del otro idioma con un aviso (`?untranslated=1`, textos en `notices`
+  de `inc/ui-strings.php`).
+- **Páginas `cv` y `blog`**: tienen su traducción en inglés (`/en/resume/` y
+  `/en/posts/` en local), con la misma plantilla.
+- **Textos fijos del tema** (home, CV, botones): siguen en `inc/site-content.php`
+  e `inc/ui-strings.php` como `['es' => ..., 'en' => ...]`.
+
+Con Docker, `docker compose run --rm wpcli` instala y configura todo esto solo.
+
+### Configuración en producción (una sola vez)
+**Por SSH (recomendado):** `scripts/prod-setup-polylang.sh` hace todo lo de
+abajo con WP-CLI (backup de la base, Polylang, idiomas, páginas EN y
+vinculación de notas existentes) y es idempotente. Correrlo recién cuando
+el tema >= 1.1.0 esté desplegado:
+
+```bash
+ssh -p <puerto> <usuario>@<host> 'bash -s' < scripts/prod-setup-polylang.sh
+```
+
+**Desde el admin**, a mano:
+1. Plugins > Añadir nuevo > instalar y activar **Polylang**. Saltear el asistente.
+2. Idiomas > Idiomas: agregar **Español** (`es`, es_AR), primero y por defecto,
+   y **English** (`en`, en_US).
+3. Asignar el idioma por defecto a todo el contenido existente (Polylang lo
+   ofrece con un aviso arriba de la pantalla de idiomas).
+4. Idiomas > Ajustes > URL modifications: “The language is set from the
+   directory name”, **ocultar** el idioma por defecto en la URL y quitar
+   `/language/`. En “Detect browser language”: **activado**.
+5. Páginas: en `CV` y `Blog`, crear la traducción en inglés desde la columna
+   del idioma (+), con la misma plantilla (CV / Blog) y slug propio
+   (ej. `resume`, `posts`).
+6. Posts con versión EN del sistema anterior: muestran la caja “Versión en
+   inglés anterior”. Crear la traducción EN, copiar título y contenido, y
+   marcar “borrar estos datos” al guardar.
+7. Ajustes > Enlaces permanentes > Guardar (refresca las URLs).
 
 ## Editar contenido
 Todo el contenido (perfil, proyectos, experiencia, cursos, habilidades) vive en:
@@ -59,7 +110,7 @@ npm run watch        # recompila automáticamente mientras editás
 - `page-cv.php` — plantilla de CV
 - `page-cursos.php` — plantilla de Cursos (con filtro por formato)
 - `header.php` / `footer.php` — header y footer compartidos
-- `assets/js/main.js` — toggle de idioma ES/EN, menú móvil, animaciones
-  reveal-on-scroll, contador animado, filtro de cursos (reemplaza
-  React + framer-motion del sitio original, sin dependencias)
-- `inc/i18n.php` — sistema bilingüe ES/EN (sin plugin, sin recarga de página)
+- `assets/js/main.js` — menú móvil, animaciones reveal-on-scroll, contador
+  animado (reemplaza React + framer-motion del sitio original, sin dependencias)
+- `inc/i18n.php` — helpers bilingües ES/EN sobre Polylang (idioma actual, URLs)
+- `inc/blog.php` — blog bilingüe (Polylang) + caja de migración del sistema anterior

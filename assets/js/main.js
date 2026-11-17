@@ -1,7 +1,6 @@
 (function () {
     'use strict';
 
-    var STORAGE_KEY = 'es-lang';
     var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     /* ---------- Íconos (lucide) ---------- */
@@ -11,47 +10,56 @@
         }
     }
 
-    /* ---------- Idioma ES/EN ---------- */
-    function getLang() {
-        try {
-            var saved = localStorage.getItem(STORAGE_KEY);
-            if (saved === 'es' || saved === 'en') return saved;
-        } catch (e) {}
-        return 'es';
-    }
+    /* ---------- Confirmación al cambiar a un idioma sin traducción ---------- */
+    // Los links del selector que llevan a un idioma donde la página actual no
+    // existe traen data-es-confirm* (textos en el idioma de destino). En vez de
+    // navegar directo, se muestra un toast para confirmar. Si el JS no corre,
+    // el link funciona igual y la página de destino muestra un aviso.
+    function initLangConfirm() {
+        var toast = document.getElementById('es-lang-confirm');
+        if (!toast) return;
+        var msg = toast.querySelector('#es-lang-confirm-msg');
+        var ok = toast.querySelector('[data-es-confirm-ok]');
+        var cancel = toast.querySelector('[data-es-confirm-cancel]');
+        var opener = null;
 
-    function applyLang(lang) {
-        document.documentElement.lang = lang;
+        function close() {
+            toast.hidden = true;
+            if (opener) opener.focus();
+            opener = null;
+        }
 
-        document.querySelectorAll('.i18n').forEach(function (el) {
-            if (el.getAttribute('data-lang') === lang) {
-                el.removeAttribute('hidden');
-            } else {
-                el.setAttribute('hidden', '');
-            }
-        });
+        function open(link) {
+            opener = link;
+            // Ya confirmó: el aviso de la página de destino sobra.
+            var url = new URL(link.href, window.location.href);
+            url.searchParams.delete('untranslated');
 
-        document.querySelectorAll('.es-lang-btn').forEach(function (btn) {
-            var active = btn.getAttribute('data-set-lang') === lang;
-            btn.classList.toggle('bg-[hsl(var(--ink))]', active);
-            btn.classList.toggle('text-primary-foreground', active);
-            btn.classList.toggle('text-muted-foreground', !active);
-            btn.setAttribute('aria-pressed', active ? 'true' : 'false');
-        });
-    }
+            toast.setAttribute('lang', link.getAttribute('lang') || '');
+            msg.textContent = link.getAttribute('data-es-confirm');
+            ok.textContent = link.getAttribute('data-es-confirm-ok');
+            ok.href = url.toString();
+            cancel.textContent = link.getAttribute('data-es-confirm-cancel');
+            toast.hidden = false;
+            ok.focus();
+        }
 
-    function setLang(lang) {
-        try { localStorage.setItem(STORAGE_KEY, lang); } catch (e) {}
-        applyLang(lang);
-    }
-
-    function initLangToggle() {
-        document.querySelectorAll('.es-lang-btn').forEach(function (btn) {
-            btn.addEventListener('click', function () {
-                setLang(btn.getAttribute('data-set-lang'));
+        document.querySelectorAll('a[data-es-confirm]').forEach(function (link) {
+            link.addEventListener('click', function (e) {
+                if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return; // nueva pestaña, etc.
+                e.preventDefault();
+                open(link);
             });
         });
-        applyLang(getLang());
+
+        cancel.addEventListener('click', close);
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && !toast.hidden) close();
+        });
+        document.addEventListener('click', function (e) {
+            if (toast.hidden || toast.contains(e.target) || (opener && opener.contains(e.target))) return;
+            close();
+        });
     }
 
     /* ---------- Menú móvil ---------- */
@@ -142,7 +150,7 @@
     document.addEventListener('DOMContentLoaded', function () {
         document.body.classList.remove('js-pending');
         renderIcons();
-        initLangToggle();
+        initLangConfirm();
         initMobileMenu();
         initReveal();
         initCountUp();

@@ -88,8 +88,6 @@ body {
   to { opacity: 1; transform: scale(1); }
 }
 
-/* Idioma: los .i18n con [hidden] se ocultan (comportamiento nativo del atributo) */
-
 @media (prefers-reduced-motion: reduce) {
   .ticker-track { animation: none; }
   .es-reveal, .es-fade-in, .es-fade-in-scale { animation: none !important; transition: none !important; opacity: 1 !important; transform: none !important; }
