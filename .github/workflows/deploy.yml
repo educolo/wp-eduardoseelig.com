@@ -1,0 +1,71 @@
+# Publica el tema en la rama `deploy`, que es la que despliega Hostinger.
+# La rama contiene solo el contenido de theme/ (con el CSS recién compilado):
+# nada de docker, scripts, docs ni configuración del repo llega al hosting.
+#
+# Un commit en `deploy` por cada push a main, que referencia el commit de
+# origen. Rollback: revertir en `deploy` (o re-correr este workflow sobre un
+# commit anterior de main desde Actions > Run workflow).
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# Nunca dos publicaciones a la vez; la última gana.
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Compilar CSS (Tailwind)
+        run: |
+          npm ci
+          npm run build
+
+      - name: Publicar theme/ en la rama deploy
+        env:
+          SOURCE_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          subject="$(git log -1 --format=%s "$SOURCE_SHA")"
+
+          out="$RUNNER_TEMP/deploy"
+          if git ls-remote --exit-code --heads origin deploy >/dev/null; then
+            git fetch --depth=1 origin deploy
+            git worktree add -B deploy "$out" FETCH_HEAD
+          else
+            # Primera vez: rama huérfana, sin historia de main.
+            git worktree add --detach "$out"
+            git -C "$out" checkout --orphan deploy
+          fi
+
+          # Reemplazar todo el contenido por el de theme/ (incluye el CSS
+          # compilado arriba y dotfiles como .htaccess).
+          find "$out" -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -a theme/. "$out"/
+
+          cd "$out"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Sin cambios en el tema; no se publica nada."
+            exit 0
+          fi
+          git commit -q -m "Deploy ${SOURCE_SHA::7}: $subject" -m "Origen: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/commit/$SOURCE_SHA"
+          git push origin deploy
+          git log -1 --stat --format='%h %s' | tail -5

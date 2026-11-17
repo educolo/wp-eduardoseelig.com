@@ -37,9 +37,9 @@ services:
       WORDPRESS_DEBUG: 1
     volumes:
       - wp_core:/var/www/html
-      # Monta el tema desde THEME_SRC (default: el worktree actual). Para
-      # previsualizar otro worktree: THEME_SRC=/ruta/al/worktree docker compose up -d wordpress
-      - ${THEME_SRC:-./}:/var/www/html/wp-content/themes/eduardo-seelig
+      # Monta el tema desde THEME_SRC (default: ./theme del worktree actual). Para
+      # previsualizar otro worktree: THEME_SRC=/ruta/al/worktree/theme docker compose up -d wordpress
+      - ${THEME_SRC:-./theme}:/var/www/html/wp-content/themes/eduardo-seelig
 
   # Servicio one-shot: instala WordPress, activa el tema y crea las paginas cv/cursos.
   wpcli:
@@ -65,7 +65,7 @@ services:
       ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@example.com}
     volumes:
       - wp_core:/var/www/html
-      - ${THEME_SRC:-./}:/var/www/html/wp-content/themes/eduardo-seelig
+      - ${THEME_SRC:-./theme}:/var/www/html/wp-content/themes/eduardo-seelig
       - ./docker/wp-setup.sh:/wp-setup.sh:ro
     entrypoint: ["sh", "/wp-setup.sh"]
 

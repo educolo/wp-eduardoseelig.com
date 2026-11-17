@@ -1,5 +1,6 @@
-# Bloquea el acceso web directo a archivos de desarrollo / configuración
-# que el deploy copia dentro de la carpeta pública del tema.
+# Defensa extra: la rama `deploy` solo trae el tema, pero el deploy de Git
+# de Hostinger deja `.git/` en la carpeta pública, y así queda cubierto si
+# algún archivo de desarrollo vuelve a colarse.
 # Los .php del tema NO se bloquean: WordPress los incluye internamente.
 
 # Dotfiles (.env, .env.example, .gitignore, etc.)
