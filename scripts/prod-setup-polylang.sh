@@ -35,7 +35,15 @@ backup="(sin backup)"
 if [ "${SKIP_BACKUP:-0}" != "1" ]; then
   mkdir -p "$HOME/backups"
   backup="$HOME/backups/eduardoseelig-pre-polylang-$(date +%Y%m%d-%H%M%S).sql"
-  wp db export "$backup" --quiet
+  # mysqldump directo: en Hostinger `wp db export` sale con 255 sin error.
+  # Las credenciales van a un archivo temporal 600, no a la línea de comandos.
+  cnf="$(umask 077 && mktemp)"
+  trap 'rm -f "$cnf"' EXIT
+  printf '[client]\nuser=%s\npassword=%s\nhost=%s\n' \
+    "$(wp config get DB_USER)" "$(wp config get DB_PASSWORD)" "$(wp config get DB_HOST)" > "$cnf"
+  mysqldump --defaults-extra-file="$cnf" --single-transaction --no-tablespaces \
+    "$(wp config get DB_NAME)" > "$backup"
+  rm -f "$cnf"
   echo "    $backup ($(du -h "$backup" | cut -f1))"
 fi
 
