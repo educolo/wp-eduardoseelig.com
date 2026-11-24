@@ -55,6 +55,12 @@ function es_ui() {
                 'untranslatedPage' => 'Esta página no está disponible en español. ¿Ir al inicio en español?',
                 'goToBlog' => 'Ir al blog', 'goToHome' => 'Ir al inicio', 'cancel' => 'Cancelar',
             ],
+            // Banner de consentimiento (template-parts/cookie-banner.php) y links del footer.
+            'cookies' => [
+                'message' => 'Uso Google Analytics para saber cuántas personas visitan el sitio y qué páginas leen. Solo guarda cookies si aceptas.',
+                'privacy' => 'Política de privacidad',
+                'accept' => 'Aceptar', 'reject' => 'Rechazar', 'settings' => 'Cookies',
+            ],
         ],
         'en' => [
             'nav' => [
@@ -98,6 +104,11 @@ function es_ui() {
                 'untranslatedPost' => "This note isn't available in English. Go to the English blog?",
                 'untranslatedPage' => "This page isn't available in English. Go to the English home page?",
                 'goToBlog' => 'Go to blog', 'goToHome' => 'Go to home', 'cancel' => 'Cancel',
+            ],
+            'cookies' => [
+                'message' => 'I use Google Analytics to see how many people visit the site and which pages they read. It only sets cookies if you accept.',
+                'privacy' => 'Privacy policy',
+                'accept' => 'Accept', 'reject' => 'Reject', 'settings' => 'Cookies',
             ],
         ],
     ];

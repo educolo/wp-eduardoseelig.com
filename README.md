@@ -91,6 +91,25 @@ ssh -p <puerto> <usuario>@<host> 'bash -s' < scripts/prod-setup-polylang.sh
    marcar “borrar estos datos” al guardar.
 7. Ajustes > Enlaces permanentes > Guardar (refresca las URLs).
 
+## Analytics y cookies
+Google Analytics 4 (`G-YMDVYXVKJ2`) se carga desde el tema, sin plugins
+(`theme/inc/analytics.php`), con Consent Mode v2:
+
+- En la UE/EEE, el Reino Unido y Suiza la analítica arranca **denegada** (lo
+  decide Google por país) y en el resto del mundo, concedida.
+- El banner (`template-parts/cookie-banner.php`) aparece solo a visitantes con
+  zona horaria europea que todavía no eligieron. La decisión se guarda en
+  `localStorage` (`es_consent`). El botón "Cookies" del footer lo vuelve a abrir.
+  Al rechazar se borran las cookies `_ga` que ya existieran.
+- GA no se carga fuera de `eduardoseelig.com` (local/staging) ni para usuarios
+  logueados. Para probarlo en local: `add_filter( 'es_analytics_should_load', '__return_true' );`
+- Mientras **Site Kit** esté activo, el tema solo imprime el consentimiento
+  (que aplica a la etiqueta de Site Kit) y no carga GA, para no medir dos veces.
+  Una vez desplegado, desinstalar Site Kit y el tema pasa a cargar GA solo.
+- El link a la política de privacidad (banner y footer) sale de la página
+  elegida en Ajustes > Privacidad (o su traducción de Polylang). Si no hay una
+  publicada, no se muestra.
+
 ## Deploy
 Al mergear a `main`, el workflow `.github/workflows/deploy.yml` compila el CSS
 y publica **solo el contenido de `theme/`** en la rama `deploy`, con un commit
@@ -132,9 +151,10 @@ theme/                    ← el tema (lo único que se despliega)
   header.php / footer.php header y footer compartidos
   inc/i18n.php            helpers bilingües ES/EN sobre Polylang (idioma actual, URLs)
   inc/blog.php            blog bilingüe (Polylang) + caja de migración del sistema anterior
+  inc/analytics.php       Google Analytics + Consent Mode, URL de la política de privacidad
   inc/site-content.php, inc/ui-strings.php   textos y datos
-  template-parts/         selector de idioma, toast y avisos
-  assets/js/main.js       menú móvil, reveal-on-scroll, contador, toast de idioma
+  template-parts/         selector de idioma, toast, avisos y banner de cookies
+  assets/js/main.js       menú móvil, reveal-on-scroll, contador, toast de idioma, banner de cookies
   assets/css/app.css      CSS compilado
 src/tailwind-input.css    fuente de Tailwind
 docker/, docker-compose.yml   entorno local
