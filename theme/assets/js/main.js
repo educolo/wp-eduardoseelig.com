@@ -62,6 +62,77 @@
         });
     }
 
+    /* ---------- Consentimiento de cookies (ver inc/analytics.php) ---------- */
+    // El banner se muestra solo si el visitante todavía no eligió y su zona
+    // horaria es europea (aproximación barata a "está en la UE/Reino Unido",
+    // compatible con la caché de página). Fuera de Europa no hace falta: el
+    // Consent Mode ya concede la analítica por defecto. El botón "Cookies" del
+    // footer lo abre siempre, para cambiar la decisión.
+    var EU_ATLANTIC_ZONES = ['Atlantic/Azores', 'Atlantic/Canary', 'Atlantic/Madeira', 'Atlantic/Reykjavik', 'Atlantic/Faroe'];
+
+    function isEuropeanTimeZone() {
+        try {
+            var tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+            return tz.indexOf('Europe/') === 0 || EU_ATLANTIC_ZONES.indexOf(tz) !== -1;
+        } catch (e) {
+            return false;
+        }
+    }
+
+    function initCookieConsent() {
+        var banner = document.getElementById('es-cookie-banner');
+        if (!banner) return;
+        var key = banner.getAttribute('data-es-consent-key');
+
+        function readChoice() {
+            try { return localStorage.getItem(key); } catch (e) { return null; }
+        }
+
+        function saveChoice(value) {
+            try { localStorage.setItem(key, value); } catch (e) {}
+            if (typeof window.gtag === 'function') {
+                window.gtag('consent', 'update', { analytics_storage: value });
+            }
+            if (value === 'denied') deleteAnalyticsCookies();
+        }
+
+        // Al revocar, borra las cookies que GA ya hubiera guardado (_ga, _ga_<ID>).
+        // GA las pone en el dominio raíz (".eduardoseelig.com"), así que se
+        // borran con y sin dominio para cubrir ambos casos.
+        function deleteAnalyticsCookies() {
+            var host = window.location.hostname.replace(/^www\./, '');
+            document.cookie.split(';').forEach(function (c) {
+                var name = c.split('=')[0].trim();
+                if (name !== '_ga' && name.indexOf('_ga_') !== 0) return;
+                var expire = name + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+                document.cookie = expire;
+                document.cookie = expire + '; domain=.' + host;
+            });
+        }
+
+        function open() {
+            banner.hidden = false;
+            var accept = banner.querySelector('[data-es-consent="granted"]');
+            if (accept) accept.focus();
+        }
+
+        banner.querySelectorAll('[data-es-consent]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                saveChoice(btn.getAttribute('data-es-consent'));
+                banner.hidden = true;
+            });
+        });
+
+        document.querySelectorAll('[data-es-cookie-settings]').forEach(function (btn) {
+            btn.addEventListener('click', open);
+        });
+
+        var choice = readChoice();
+        if (choice !== 'granted' && choice !== 'denied' && isEuropeanTimeZone()) {
+            banner.hidden = false; // sin robar el foco al cargar la página
+        }
+    }
+
     /* ---------- Menú móvil ---------- */
     function initMobileMenu() {
         var btn = document.getElementById('es-menu-btn');
@@ -151,6 +222,7 @@
         document.body.classList.remove('js-pending');
         renderIcons();
         initLangConfirm();
+        initCookieConsent();
         initMobileMenu();
         initReveal();
         initCountUp();

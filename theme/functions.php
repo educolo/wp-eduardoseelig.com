@@ -6,7 +6,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'ES_THEME_VERSION', '1.1.0' );
+define( 'ES_THEME_VERSION', '1.2.0' );
 define( 'ES_THEME_DIR', get_template_directory() );
 define( 'ES_THEME_URI', get_template_directory_uri() );
 
@@ -14,6 +14,7 @@ require_once ES_THEME_DIR . '/inc/site-content.php';
 require_once ES_THEME_DIR . '/inc/ui-strings.php';
 require_once ES_THEME_DIR . '/inc/i18n.php';
 require_once ES_THEME_DIR . '/inc/blog.php';
+require_once ES_THEME_DIR . '/inc/analytics.php';
 
 /** Setup del tema */
 function es_theme_setup() {

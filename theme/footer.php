@@ -36,10 +36,16 @@
     </div>
     <div class="border-t border-white/10 px-5 py-6 text-center font-mono-plex text-[11px] uppercase tracking-[0.18em] text-[hsl(40_8%_55%)] md:px-10">
         © <?php echo esc_html( date( 'Y' ) ); ?> <?php echo esc_html( $perfil['name'] ); ?> · Argentina
+        <?php $privacy_url = es_privacy_url(); ?>
+        <?php if ( $privacy_url ) : ?>
+            · <a href="<?php echo esc_url( $privacy_url ); ?>" class="hover:underline"><?php echo esc_html( es_ui_get( 'cookies.privacy' ) ); ?></a>
+        <?php endif; ?>
+        · <button type="button" data-es-cookie-settings class="uppercase tracking-[0.18em] hover:underline"><?php echo esc_html( es_ui_get( 'cookies.settings' ) ); ?></button>
     </div>
 </footer>
 
 <?php get_template_part( 'template-parts/lang-confirm' ); ?>
+<?php get_template_part( 'template-parts/cookie-banner' ); ?>
 <?php wp_footer(); ?>
 </body>
 </html>
